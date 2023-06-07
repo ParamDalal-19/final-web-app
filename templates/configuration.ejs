@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Page</title>
+</head>
+<body>
+  <h1>Welcome to the Home Page</h1>
+  <form>
+    <select>
+      <% viewNames.forEach(function(viewName) { %>
+        <option><%= viewName %></option>
+      <% }); %>
+    </select>
+  </form>
+</body>
+</html>

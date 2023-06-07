@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Table Visualization</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .popup-form {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      width: 300px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Table Visualization</h1>
+  <button id="addRowBtn">Add Row</button>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Visualization ID</th>
+        <th>Columns</th>
+        <th>Seq Number</th>
+        <th>Is Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <div id="formPopup" class="popup-form">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <h2 id="formPopupTitle">Add Row</h2>
+      <form id="form">
+        <input type="hidden" id="rowIndex" value="">
+        <label for="visualization_id">Visualization ID:</label>
+        <input type="text" id="visualization_id" name="visualization_id" required><br><br>
+        
+        <label for="columns">Columns:</label>
+        <input type="text" id="columns" name="columns" required><br><br>
+        
+        <label for="seq_number">Seq Number:</label>
+        <input type="text" id="seq_number" name="seq_number" required><br><br>
+        
+        <label for="is_active">Is Active:</label>
+        <input type="checkbox" id="is_active" name="is_active"><br><br>
+        
+        <input type="submit" value="Add">
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Handle Add Row button click event
+    const addRowBtn = document.getElementById('addRowBtn');
+    const formPopup = document.getElementById('formPopup');
+    const closePopupBtn = document.querySelector('.close');
+    const formPopupTitle = document.getElementById('formPopupTitle');
+    const form = document.getElementById('form');
+    const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+    let editRowIndex = null;
+
+    addRowBtn.addEventListener('click', function() {
+      formPopup.style.display = 'block';
+      formPopupTitle.textContent = 'Add Row';
+      form.reset();
+      editRowIndex = null;
+    });
+
+    closePopupBtn.addEventListener('click', function() {
+      formPopup.style.display = 'none';
+    });
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get form values
+      const visualizationId = document.getElementById('visualization_id').value;
+      const columns = document.getElementById('columns').value;
+      const seqNumber = document.getElementById('seq_number').value;
+      const isActive = document.getElementById('is_active').checked;
+
+      if (editRowIndex !== null) {
+        // Update row values
+        const row = dataTable.rows[editRowIndex];
+        row.cells[0].textContent = visualizationId;
+        row.cells[1].textContent = columns;
+        row.cells[2].textContent = seqNumber;
+        row.cells[3].textContent = isActive ? 'Active' : 'Inactive';
+      } else {
+        if (visualizationId && columns && seqNumber) {
+          // Create a new table row
+          const newRow = document.createElement('tr');
+          const visualizationIdCell = document.createElement('td');
+          const columnsCell = document.createElement('td');
+          const seqNumberCell = document.createElement('td');
+          const isActiveCell = document.createElement('td');
+          const actionsCell = document.createElement('td');
+          const editBtn = document.createElement('button');
+
+          // Set cell values
+          visualizationIdCell.textContent = visualizationId;
+          columnsCell.textContent = columns;
+          seqNumberCell.textContent = seqNumber;
+          isActiveCell.textContent = isActive ? 'Active' : 'Inactive';
+
+          // Edit button
+          editBtn.textContent = 'Edit';
+          editBtn.addEventListener('click', function() {
+            formPopup.style.display = 'block';
+            formPopupTitle.textContent = 'Edit Row';
+            document.getElementById('visualization_id').value = row.cells[0].textContent;
+            document.getElementById('columns').value = row.cells[1].textContent;
+            document.getElementById('seq_number').value = row.cells[2].textContent;
+            document.getElementById('is_active').checked = row.cells[3].textContent === 'Active';
+            document.getElementById('rowIndex').value = editRowIndex;
+          });
+
+          // Append cells to the row
+          newRow.appendChild(visualizationIdCell);
+          newRow.appendChild(columnsCell);
+          newRow.appendChild(seqNumberCell);
+          newRow.appendChild(isActiveCell);
+          actionsCell.appendChild(editBtn);
+          newRow.appendChild(actionsCell);
+
+          // Append the row to the table
+          dataTable.appendChild(newRow);
+        }
+      }
+
+      // Reset form values
+      form.reset();
+
+      // Close the popup
+      formPopup.style.display = 'none';
+      editRowIndex = null;
+    });
+  </script>
+</body>
+</html>

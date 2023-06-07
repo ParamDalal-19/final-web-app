@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="https://cdn.datatables.net/1.12.0/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap5.min.js"></script>
+
+    <title>Visualization Mapping</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center text-primary"><b>
+                <!-- <%= title %> -->
+                VISUALIZATION MAPPING
+            </b></h1>
+
+        <span id="message"></span>
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col col-sm-9">DATA</div>
+                    <div class="col col-sm-3">
+                        <button type="button" id="add_data" class="btn btn-success btn-sm float-end">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="data">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Visualization ID</th>
+                                <th>Columns</th>
+                                <th>Sequence Number</th>
+                                <th>Is Active</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<div class="modal" tabindex="-1" id="action_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" id="sample_form">
+                <div class="modal-header" id="dynamic_modal_title">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <div class="mb-3">
+                        <label class="form-label">Visualization ID</label>
+                        <input type="number" name="visualizationId" id="visualizationId" class="form-control" />
+                    </div> -->
+                    <div class="mb-3">
+                        <label class="form-label">Visualization ID</label>
+                        <select name="visualizationId" id="visualizationId" class="form-control">
+                            <!-- <option value= name="select"></option> -->
+                            <option value=""></option>
+                            <% viewNames.forEach(function(viewName) { %>
+                                <option value="<%= viewName %>">
+                                    <%= viewName %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>
+                    <!-- <div class="mb-3">
+                        <label class="form-label">Columns</label>
+                        <input type="number" name="columns" id="columns" class="form-control" />
+                    </div> -->
+                    <div class="mb-3">
+                        <label class="form-label">Columns</label>
+                        <select name="columns" id="columns" class="form-control">
+                            <option value=""></option>
+                            <% for (let i=1; i <=12; i++) { %>
+                                <option value="<%= i %>">
+                                    <%= i %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Sequence Number</label>
+                        <input type="number" name="sequenceNumber" id="sequenceNumber" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Is Active?</label>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="isActive" value="No" />
+                            <input type="checkbox" name="isActiveToggle" id="isActiveToggle" class="form-check-input"
+                                onchange="toggleIsActiveValue(this)" />
+                            <label class="form-check-label" for="isActiveToggle">Toggle to Activate/Deactivate</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="id" />
+                    <input type="hidden" name="action" id="action" value="Add" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="action_button">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleIsActiveValue(checkbox) {
+        var isActiveInput = document.querySelector('input[name="isActive"]');
+        isActiveInput.value = checkbox.checked ? "Yes" : "No";
+    }
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        load_data();
+
+        function load_data() {
+            $.ajax({
+                url: "http://localhost:3000/api/configuration/action",
+                method: "POST",
+                data: { action: 'fetch' },
+                dataType: "JSON",
+                success: function (data) {
+                    console.log("hu aya chu1")
+                    var html = '';
+
+                    if (data.data.length > 0) {
+                        for (var count = 0; count < data.data.length; count++) {
+                            html += `
+                        <tr>
+                            <td>`+ data.data[count].id + `</td>
+                            <td>`+ data.data[count].visualizationId + `</td>
+                            <td>`+ data.data[count].columns + `</td>
+                            <td>`+ data.data[count].sequenceNumber + `</td>
+                            <td>`+ data.data[count].isActive + `</td>
+                            <td><button type="button" class="btn btn-warning btn-sm edit" data-id="`+ data.data[count].id + `">Edit</button>&nbsp;<button type="button" class="btn btn-danger btn-sm delete" data-id="` + data.data[count].id + `">Delete</button></td>
+                        </tr>
+                        `;
+                        }
+                    }
+
+                    $('#data tbody').html(html);
+
+                    // Check for duplicate sequence numbers
+                    var sequenceNumbers = [];
+                    var duplicateSequenceNumbers = [];
+
+                    data.data.forEach(function (row) {
+                        if (sequenceNumbers.includes(row.sequenceNumber)) {
+                            duplicateSequenceNumbers.push(row.sequenceNumber);
+                        } else {
+                            sequenceNumbers.push(row.sequenceNumber);
+                        }
+                    });
+
+                    if (duplicateSequenceNumbers.length > 0) {
+                        var promptMessage = 'Duplicate sequence number found: ' + duplicateSequenceNumbers.join(', ');
+                        $('#message').html('<div class="alert alert-danger">' + promptMessage + '</div>');
+                    }
+                }
+            });
+        }
+
+        $('#add_data').click(function () {
+            $('#dynamic_modal_title').text('Add Data');
+            $('#sample_form')[0].reset();
+            $('#action').val('Add');
+            $('#action_button').text('Add');
+            $('#action_modal').modal('show');
+        });
+
+        $('#sample_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // Clear previous validation alerts
+            $('.is-invalid').removeClass('is-invalid');
+
+            // Perform form validation
+            var isValid = true;
+
+            // Check if Visualization ID is empty
+            var visualizationIdInput = $('#visualizationId');
+            if (visualizationIdInput.val().trim() === '') {
+                isValid = false;
+                visualizationIdInput.addClass('is-invalid');
+            } else {
+                visualizationIdInput.removeClass('is-invalid');
+            }
+
+            // Check if Columns is empty
+            var columnsInput = $('#columns');
+            if (columnsInput.val().trim() === '') {
+                isValid = false;
+                columnsInput.addClass('is-invalid');
+            } else {
+                columnsInput.removeClass('is-invalid');
+            }
+
+            // Check if Sequence Number is empty
+            // var sequenceNumberInput = $('#sequenceNumber');
+            // if (sequenceNumberInput.val().trim() === '') {
+            //     isValid = false;
+            //     sequenceNumberInput.addClass('is-invalid');
+            // } else {
+            //     sequenceNumberInput.removeClass('is-invalid');
+            // }
+            var sequenceNumberInput = $('#sequenceNumber');
+            var sequenceNumberValue = sequenceNumberInput.val().trim();
+
+
+            // imp
+            if (sequenceNumberValue === '' || sequenceNumberValue <= 0 || !Number.isInteger(Number(sequenceNumberValue))) {
+                isValid = false;
+                sequenceNumberInput.addClass('is-invalid');
+            } else {
+                sequenceNumberInput.removeClass('is-invalid');
+            }
+
+
+            if (!isValid) {
+                return;
+            }
+
+            $.ajax({
+                url: "http://localhost:3000/api/configuration/action",
+                method: "POST",
+                data: $('#sample_form').serialize(),
+                dataType: "JSON",
+                beforeSend: function () {
+                    $('#action_button').attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $('#action_button').attr('disabled', false);
+                    $('#message').html('<div class="alert alert-success">' + data.message + '</div>');
+                    $('#action_modal').modal('hide');
+
+                    load_data();
+
+                    setTimeout(function () {
+                        $('#message').html('');
+                    }, 5000);
+                }
+            });
+        });
+
+        $('#action_modal').on('shown.bs.modal', function () {
+            // Clear previous validation alerts when the modal is opened
+            $('.is-invalid').removeClass('is-invalid');
+        });
+
+        $(document).on('click', '.edit', function () {
+            var id = $(this).data('id');
+            $('#dynamic_modal_title').text('Edit Data');
+            $('#action').val('Edit');
+            $('#action_button').text('Edit');
+            $('#action_modal').modal('show');
+
+            $.ajax({
+                url: "http://localhost:3000/api/configuration/action",
+                method: "POST",
+                data: { id: id, action: 'fetch_single' },
+                dataType: "JSON",
+                success: function (data) {
+                    $('#visualizationId').val(data.visualizationId);
+                    $('#columns').val(data.columns);
+                    $('#sequenceNumber').val(data.sequenceNumber);
+                    $('#isActive').val(data.isActive);
+                    $('#id').val(data.id);
+
+                    // Toggle the isActive switch based on the value of data.isActive
+                    var isActiveToggle = $('#isActiveToggle');
+                    if (data.isActive === 'Yes') {
+                        isActiveToggle.prop('checked', true);
+                    } else {
+                        isActiveToggle.prop('checked', false);
+                    }
+
+                }
+            });
+
+        });
+
+
+
+        $(document).on('click', '.delete', function () {
+            var id = $(this).data('id');
+
+            if (confirm("Are you sure you want to delete this data?")) {
+                $.ajax({
+                    url: "http://localhost:3000/api/configuration/action",
+                    method: "POST",
+                    data: { action: 'delete', id: id },
+                    dataType: "JSON",
+                    success: function (data) {
+                        $('#message').html('<div class="alert alert-success">' + data.message + '</div>');
+                        load_data();
+                        setTimeout(function () {
+                            $('#message').html('');
+                        }, 5000);
+                    }
+                });
+            }
+
+        });
+    });
+
+</script>
