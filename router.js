@@ -105,32 +105,59 @@ router.get("/dashboard", checktoken, (req, res) => {
   const email = req.decoded.email;
   visdata.get_vis_data(email, (err, result) => {
     if (err) {
-      // console.log('router me error 1');
-      res.status(500).json({ error: "An error occurred" });
-    } else {
-      // console.log('data router pe mila aur filter k liye bhej diya');
-      visdata.get_vis_chart_data(result, (err, finalresult) => {
-        if (err) {
-          // console.log('router me error 2');
-          res.status(500).json({ error: "An error occurred" });
-        } else {
-          // console.log('data router pe mila aur front pe dunga');
-          res.setHeader("Content-Type", "text/html"); // Set the content-type to HTML
-          const html = `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <title>Dashboard</title>
-                        </head>
-                        <body>
-                            <pre>${JSON.stringify(finalresult, null, 2)}</pre>
-                        </body>
-                        </html>
-                    `;
-          res.send(html);
-        }
-      });
+      return res.status(500).json({ error: "An error occurred" });
     }
+
+    visdata.get_vis_chart_data(result, (err, finalresult) => {
+      if (err) {
+        return res.status(500).json({ error: "An error occurred" });
+      }
+
+      const chartResults = []; // JSON array to store chart results
+
+      // Use async/await to handle asynchronous calls
+      const processCharts = async () => {
+        for (const visualization of finalresult) {
+          const visualizationId = visualization.visualizationId;
+          const viewResults = visualization.view_results;
+          const chartType = visualization.chart_type;
+          console.log(
+            "check this out :-",
+            visualizationId,
+            viewResults,
+            chartType
+          );
+
+          try {
+            makechart.create_chart(
+              viewResults,
+              visualizationId,
+              chartType,
+              (err, chartResult) => {
+                if (err) {
+                  console.error("An error occurred while creating chart:", err);
+                } else {
+                  chartResults.push(chartResult);
+                }
+              }
+            );
+          } catch (err) {
+            console.error("An error occurred while creating chart:", err);
+          }
+        }
+        //   console.log("chart ke result :-",chartResults)
+        //   stringyf = JSON.stringify(chartResults)
+        //   console.log("stringyfy :- ",stringyf)
+        //   pars = JSON.parse(stringyf)
+        //   console.log("parse wala :- ",pars)
+        // Send the JSON array to the frontend
+        res.render("dashboard", { chartResults });
+        //  res.json(chartResults)
+      };
+
+      // Invoke the async function to process charts
+      processCharts();
+    });
   });
 });
 
