@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <!-- Include Plotly.js library -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <% for (let i = 0; i < chartResults.length; i++) { %>
+    <!-- Create a container for each chart -->
+    <div id="<%- chartResults[i].containerId %>"></div>
+  <% } %>
+  
+  <script>
+    // Retrieve the chart results from the backend
+    const chartResults = <%- JSON.stringify(chartResults) %>;
+
+    // Create charts using Plotly.js
+    chartResults.forEach((chart) => {
+      Plotly.newPlot(chart.containerId, chart.data, chart.layout, chart.config);
+    });
+  </script>
+</body>
+</html>

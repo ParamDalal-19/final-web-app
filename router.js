@@ -8,6 +8,8 @@ const checkrole = require("./validation/check_role");
 const fs = require("fs");
 const vismapController = require("./controllers/vismap");
 const visdata = require("./controllers/vis_res.js");
+const makechart = require("./controllers/make_chart");
+const plotly = require("plotly");
 
 router.get("/register", (req, res) => {
   res.sendFile(path.join(__dirname, "templates", "trial_signup.html"));
@@ -121,23 +123,24 @@ router.get("/dashboard", checktoken, (req, res) => {
           const visualizationId = visualization.visualizationId;
           const viewResults = visualization.view_results;
           const chartType = visualization.chart_type;
-          console.log(
-            "check this out :-",
-            visualizationId,
-            viewResults,
-            chartType
-          );
+          // console.log("check this out :-", visualizationId, viewResults, chartType);
 
           try {
             makechart.create_chart(
               viewResults,
               visualizationId,
               chartType,
-              (err, chartResult) => {
+              (chartResult, err) => {
                 if (err) {
+                  console.log("ERROR :- ", err);
+                  console.log("chartresult :- ", chartResult);
                   console.error("An error occurred while creating chart:", err);
                 } else {
+                  console.log("push k pehle chart result", chartResults);
+                  console.log("result bahar mila aur abb push karunga");
                   chartResults.push(chartResult);
+                  console.log("push ho gaya");
+                  console.log("puch k bad chart result", chartResults);
                 }
               }
             );
@@ -151,8 +154,8 @@ router.get("/dashboard", checktoken, (req, res) => {
         //   pars = JSON.parse(stringyf)
         //   console.log("parse wala :- ",pars)
         // Send the JSON array to the frontend
-        res.render("dashboard", { chartResults });
-        //  res.json(chartResults)
+        // res.render('dashboard', { chartResults });
+        res.json(chartResults);
       };
 
       // Invoke the async function to process charts
@@ -166,6 +169,7 @@ router.get("/configuration", checktoken, (req, res) => {
   const query = "SELECT title FROM visualization WHERE isActive = 'Yes'";
   db.query(query, (err, results) => {
     if (err) throw err;
+    console.log(results)
     const viewNames = results.map((row) => row[Object.keys(row)[0]]);
     res.render("config", { title: "Visualization Mapping", viewNames });
   });
