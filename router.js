@@ -120,8 +120,8 @@ router.get("/dashboard", checktoken, (req, res) => {
       // Use async/await to handle asynchronous calls
       const processCharts = async () => {
         for (const visualization of finalresult) {
-          const visualizationId = visualization.visualizationId;
-          const viewResults = visualization.view_results;
+          const visualizationId = visualization.slug_name;
+          const viewResults = visualization.viewResult;
           const chartType = visualization.chart_type;
           // console.log("check this out :-", visualizationId, viewResults, chartType);
 
@@ -132,15 +132,9 @@ router.get("/dashboard", checktoken, (req, res) => {
               chartType,
               (chartResult, err) => {
                 if (err) {
-                  console.log("ERROR :- ", err);
-                  console.log("chartresult :- ", chartResult);
                   console.error("An error occurred while creating chart:", err);
                 } else {
-                  console.log("push k pehle chart result", chartResults);
-                  console.log("result bahar mila aur abb push karunga");
                   chartResults.push(chartResult);
-                  console.log("push ho gaya");
-                  console.log("puch k bad chart result", chartResults);
                 }
               }
             );
@@ -148,13 +142,9 @@ router.get("/dashboard", checktoken, (req, res) => {
             console.error("An error occurred while creating chart:", err);
           }
         }
-        //   console.log("chart ke result :-",chartResults)
-        //   stringyf = JSON.stringify(chartResults)
-        //   console.log("stringyfy :- ",stringyf)
-        //   pars = JSON.parse(stringyf)
-        //   console.log("parse wala :- ",pars)
         // Send the JSON array to the frontend
         // res.render('dashboard', { chartResults });
+        // res.render('dashboard')
         res.json(chartResults);
       };
 
@@ -169,7 +159,7 @@ router.get("/configuration", checktoken, (req, res) => {
   const query = "SELECT title FROM visualization WHERE isActive = 'Yes'";
   db.query(query, (err, results) => {
     if (err) throw err;
-    console.log(results)
+    console.log(results);
     const viewNames = results.map((row) => row[Object.keys(row)[0]]);
     res.render("config", { title: "Visualization Mapping", viewNames });
   });
