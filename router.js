@@ -145,7 +145,9 @@ router.get("/dashboard", checktoken, (req, res) => {
         // Send the JSON array to the frontend
         // res.render('dashboard', { chartResults });
         // res.render('dashboard')
-        res.json(chartResults);
+        res.render("dashboard", { chartResults });
+        //To display json data
+        // res.json(chartResults);
       };
 
       // Invoke the async function to process charts
