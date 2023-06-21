@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -55,4 +55,86 @@
         }
     </script>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Admin Page</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #d4f6f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            /* margin-top: 5px; */
+        }
+
+        .button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #0fa9f1;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0e86e2;
+        }
+
+        .top-left-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="color: #333;">ADMIN PAGE</h1>
+        <button class="button top-left-button" onclick="redirectToLogin()">Login</button>
+        <button class="button" onclick="redirectToDashboard()">Slug Mapping</button>
+        <button class="button" onclick="redirectToVisualizationMapping()">Visualization Mapping</button>
+    </div>
+
+    <script>
+        function redirectToLogin() {
+            window.location.href = '/api/login';
+        }
+
+        function redirectToDashboard() {
+            window.location.href = '/api/admin/slug';
+        }
+
+        function redirectToVisualizationMapping() {
+            window.location.href = '/api/visualization-mapping';
+        }
+    </script>
+</body>
+
 </html>
