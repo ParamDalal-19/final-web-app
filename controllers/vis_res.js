@@ -11,7 +11,7 @@ exports.get_vis_data = (email, callback) => {
     // console.log(query);
     db.query(query, (err, result) => {
       if (err) {
-        console.log("here 1");
+        // console.log("here 1");
         callback(err);
       } else {
         // console.log('result mil gaya :-',result);
@@ -61,7 +61,7 @@ exports.get_vis_chart_data = async (result, callback) => {
 
   const getViewResults = (visualizationId) => {
     return new Promise((resolve, reject) => {
-      console.log("IDD USED FOR VIEW :-", visualizationId);
+      console.log("ID USED FOR VIEW :-", visualizationId);
       //   comd = `SELECT * FROM ${visualizationId}`
       //   console.log("command :-",comd);
       db.query(`SELECT * FROM ${visualizationId}`, (err, result) => {

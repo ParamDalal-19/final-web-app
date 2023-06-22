@@ -103,6 +103,59 @@ router.get("/admin/home", checktoken, checkrole, (req, res) => {
   res.sendFile(path.join(__dirname, "templates", "admin_home.html"));
 });
 
+// router.get("/dashboard", checktoken, (req, res) => {
+//   const email = req.decoded.email;
+//   visdata.get_vis_data(email, (err, result) => {
+//     if (err) {
+//       return res.status(500).json({ error: "An error occurred" });
+//     }
+
+//     visdata.get_vis_chart_data(result, (err, finalresult) => {
+//       if (err) {
+//         return res.status(500).json({ error: "An error occurred" });
+//       }
+
+//       const chartResults = []; // JSON array to store chart results
+
+//       // Use async/await to handle asynchronous calls
+//       const processCharts = async () => {
+//         for (const visualization of finalresult) {
+//           const visualizationId = visualization.slug_name;
+//           const viewResults = visualization.viewResult;
+//           const chartType = visualization.chart_type;
+//           // console.log("check this out :-", visualizationId, viewResults, chartType);
+
+//           try {
+//             makechart.create_chart(
+//               viewResults,
+//               visualizationId,
+//               chartType,
+//               (chartResult, err) => {
+//                 if (err) {
+//                   console.error("An error occurred while creating chart:", err);
+//                 } else {
+//                   chartResults.push(chartResult);
+//                 }
+//               }
+//             );
+//           } catch (err) {
+//             console.error("An error occurred while creating chart:", err);
+//           }
+//         }
+//         // Send the JSON array to the frontend
+//         // res.render('dashboard', { chartResults });
+//         // res.render('dashboard')
+//         res.render("dashboard", { chartResults });
+//         //To display json data
+//         // res.json(chartResults);
+//       };
+
+//       // Invoke the async function to process charts
+//       processCharts();
+//     });
+//   });
+// });
+
 router.get("/dashboard", checktoken, (req, res) => {
   const email = req.decoded.email;
   visdata.get_vis_data(email, (err, result) => {
@@ -115,15 +168,23 @@ router.get("/dashboard", checktoken, (req, res) => {
         return res.status(500).json({ error: "An error occurred" });
       }
 
-      const chartResults = []; // JSON array to store chart results
+      // Sort the chart data based on the sequence number
+      finalresult.sort((a, b) => a.sequenceNumber - b.sequenceNumber);
+
+      const chartResults = [];
+      // const columnSet = [];
+      // JSON array to store chart results
 
       // Use async/await to handle asynchronous calls
       const processCharts = async () => {
         for (const visualization of finalresult) {
           const visualizationId = visualization.slug_name;
+          // const seqNum = visualization.sequenceNumber;
           const viewResults = visualization.viewResult;
           const chartType = visualization.chart_type;
           // console.log("check this out :-", visualizationId, viewResults, chartType);
+
+          // columnSet.push(visualization.columns);
 
           try {
             makechart.create_chart(
@@ -142,12 +203,10 @@ router.get("/dashboard", checktoken, (req, res) => {
             console.error("An error occurred while creating chart:", err);
           }
         }
+
         // Send the JSON array to the frontend
-        // res.render('dashboard', { chartResults });
-        // res.render('dashboard')
+        // res.render("dashboard", { chartResults, columnSet });
         res.render("dashboard", { chartResults });
-        //To display json data
-        // res.json(chartResults);
       };
 
       // Invoke the async function to process charts

@@ -128,3 +128,23 @@
 </body>
 
 </html>
+
+
+<!-- <% chartResults.forEach(function(chart) { %>
+  <div class="chart-container" style="width: <%= (chart.columns / 12) * 100 %>%;">
+    <div id="<%= chart.visualizationId %>"></div>
+  </div>
+  <% }); %>
+
+    <script>
+      const chartResults = <% - JSON.stringify(chartResults) %>;
+
+      chartResults.forEach((chart) => {
+        const div = document.createElement('div');
+        div.className = 'chart-container';
+        div.style.width = `${(chart.columns / 12) * 100}%`;
+        div.id = chart.visualizationId;
+        document.body.appendChild(div);
+        Plotly.newPlot(div.id, chart.chartResult);
+      });
+    </script> -->
