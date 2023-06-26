@@ -7,7 +7,7 @@ exports.get_vis_data = (email, callback) => {
     // console.log('here 3')
     const useremail = email;
     // console.log(useremail)
-    const query = `SELECT * FROM visualization_mapping WHERE userid = "${useremail}"`;
+    const query = `SELECT * FROM visualization_mapping WHERE userid = "${useremail}" and isActive = "Yes"`;
     // console.log(query);
     db.query(query, (err, result) => {
       if (err) {
