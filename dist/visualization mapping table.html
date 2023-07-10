@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: black; /* Set the font color to black */
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-button {
+            margin-bottom: 10px;
+        }
+
+        .edit-button, .update-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .edit-button:hover, .update-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-switch .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Additional styles */
+        body {
+            color: black; /* Set the font color to black */
+        }
+
+        th, td {
+            color: black; /* Set the font color to black */
+        }
+
+        .update-button {
+            background-color: blue; /* Set the background color to blue */
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            padding: 20px;
+            border: 1px solid black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+    <script>
+        var rowCount = 2;
+        var autoIncrementId = 1;
+
+        function addRow() {
+            var formPopup = document.querySelector('.form-popup');
+            formPopup.style.display = 'block';
+        }
+
+        function closeForm() {
+            var formPopup = document.querySelector('.form-popup');
+            formPopup.style.display = 'none';
+        }
+
+        function saveData() {
+            var form = document.getElementById('myForm');
+            var userId = form.userId.value;
+            var visualizationId = form.visualizationId.value;
+            var columns = form.columns.value;
+            var sequenceNumber = form.sequenceNumber.value;
+            var isActive = form.is_active.checked ? 'Yes' : 'No';
+
+            var table = document.getElementById('myTable');
+            var row = table.insertRow();
+
+            var idCell = row.insertCell(0);
+            idCell.innerHTML = autoIncrementId++;
+
+            var userIdCell = row.insertCell(1);
+            userIdCell.innerHTML = userId;
+
+            var visualizationIdCell = row.insertCell(2);
+            visualizationIdCell.innerHTML = visualizationId;
+
+            var columnsCell = row.insertCell(3);
+            columnsCell.innerHTML = columns;
+
+            var sequenceNumberCell = row.insertCell(4);
+            sequenceNumberCell.innerHTML = sequenceNumber;
+
+            var isActiveCell = row.insertCell(5);
+            isActiveCell.innerHTML = isActive;
+
+            var editCell = row.insertCell(6);
+            editCell.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button>';
+
+            var updateCell = row.insertCell(7);
+            updateCell.innerHTML = '<button class="update-button hidden" onclick="updateRow(this)">Update</button>';
+
+            form.reset();
+            closeForm();
+        }
+
+        function editRow(editButton) {
+            var row = editButton.parentNode.parentNode;
+
+            for (var i = 1; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var value = cell.innerText;
+
+                if (i === 5) {
+                    var isChecked = value.toLowerCase() === 'yes' ? 'checked' : '';
+                    cell.innerHTML = `
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${isChecked}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    `;
+                } else {
+                    cell.innerHTML = `<input type="text" value="${value}">`;
+                }
+            }
+
+            editButton.classList.add('hidden');
+
+            var updateButton = row.querySelector('.update-button');
+            updateButton.classList.remove('hidden');
+        }
+
+        function updateRow(updateButton) {
+            var row = updateButton.parentNode.parentNode;
+
+            for (var i = 1; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var input = cell.querySelector('input');
+                var value = input.value;
+
+                if (i === 5) {
+                    value = input.checked ? 'Yes' : 'No';
+                }
+
+                cell.innerHTML = value;
+            }
+
+            updateButton.classList.add('hidden');
+
+            var editButton = row.querySelector('.edit-button');
+            editButton.classList.remove('hidden');
+        }
+    </script>
+</head>
+<body>
+    <button class="add-button" onclick="addRow()">Add Row</button>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Visualization ID</th>
+                <th>Columns</th>
+                <th>Sequence Number</th>
+                <th>Is Active</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+
+    <div class="form-popup">
+        <div class="form-container">
+            <form id="myForm">
+                <label for="userId">User ID:</label>
+                <input type="text" id="userId" name="userId" placeholder="User ID">
+
+                <label for="visualizationId">Visualization ID:</label>
+                <input type="text" id="visualizationId" name="visualizationId" placeholder="Visualization ID">
+
+                <label for="columns">Columns:</label>
+                <input type="text" id="columns" name="columns" placeholder="Columns">
+
+                <label for="sequenceNumber">Sequence Number:</label>
+                <input type="text" id="sequenceNumber" name="sequenceNumber" placeholder="Sequence Number">
+
+                <label for="is_active">Is Active:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="is_active" name="is_active" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+
+                <button type="button" onclick="saveData()">Submit</button>
+                <button type="button" onclick="closeForm()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

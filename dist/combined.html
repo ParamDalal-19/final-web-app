@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Tables</title>
+    <style>
+        /* CSS styles for the tables and form */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-button {
+            margin-bottom: 10px;
+        }
+
+        .edit-button, .update-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .edit-button:hover, .update-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-switch .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Additional styles */
+        body {
+            color: black;
+        }
+
+        th, td {
+            color: black;
+        }
+
+        .update-button {
+            background-color: blue;
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            padding: 20px;
+            border: 1px solid black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+    <script>
+        // Code for the first table
+        var rowCount1 = 2;
+        var autoIncrementId1 = 1;
+
+        function addRow1() {
+            var formPopup = document.querySelector('.form-popup1');
+            formPopup.style.display = 'block';
+        }
+
+        function closeForm1() {
+            var formPopup = document.querySelector('.form-popup1');
+            formPopup.style.display = 'none';
+        }
+
+        function saveData1() {
+            var form = document.getElementById('myForm1');
+            var slug = form.slug.value;
+            var title = form.title.value;
+            var description = form.description.value;
+            var isActive = form.is_active.checked ? 'Yes' : 'No';
+
+            var table = document.getElementById('myTable1');
+            var row = table.insertRow();
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+
+            cell1.innerHTML = autoIncrementId1++;
+            cell2.innerHTML = slug;
+            cell3.innerHTML = title;
+            cell4.innerHTML = description;
+            cell5.innerHTML = isActive;
+            cell6.innerHTML = '<button class="edit-button" onclick="editRow1(this)">Edit</button>';
+
+            form.reset();
+            closeForm1();
+        }
+
+        function editRow1(editButton) {
+            var formPopup = document.querySelector('.form-popup1');
+            formPopup.style.display = 'block';
+
+            var form = document.getElementById('myForm1');
+            var row = editButton.parentNode.parentNode;
+            var cells = row.getElementsByTagName('td');
+
+            form.slug.value = cells[1].innerHTML;
+            form.title.value = cells[2].innerHTML;
+            form.description.value = cells[3].innerHTML;
+            form.is_active.checked = (cells[4].innerHTML === 'Yes');
+        }
+
+        function updateRow1(updateButton) {
+            var form = document.getElementById('myForm1');
+            var row = updateButton.parentNode.parentNode;
+            var cells = row.getElementsByTagName('td');
+
+            cells[1].innerHTML = form.slug.value;
+            cells[2].innerHTML = form.title.value;
+            cells[3].innerHTML = form.description.value;
+            cells[4].innerHTML = form.is_active.checked ? 'Yes' : 'No';
+
+            form.reset();
+            closeForm1();
+        }
+
+        // Code for the second table
+        var rowCount2 = 2;
+        var autoIncrementId2 = 1;
+
+        function addRow2() {
+            var formPopup2 = document.querySelector('.form-popup2');
+            formPopup2.style.display = 'block';
+        }
+
+        function closeForm2() {
+            var formPopup2 = document.querySelector('.form-popup2');
+            formPopup2.style.display = 'none';
+        }
+
+        function saveData2() {
+            var form2 = document.getElementById('myForm2');
+            var userId = form2.userId.value;
+            var visualizationId = form2.visualizationId.value;
+            var columns = form2.columns.value;
+            var sequenceNumber = form2.sequenceNumber.value;
+            var isActive = form2.is_active.checked ? 'Yes' : 'No';
+
+            var table2 = document.getElementById('myTable2');
+            var row2 = table2.insertRow();
+
+            var cell1 = row2.insertCell(0);
+            var cell2 = row2.insertCell(1);
+            var cell3 = row2.insertCell(2);
+            var cell4 = row2.insertCell(3);
+            var cell5 = row2.insertCell(4);
+            var cell6 = row2.insertCell(5);
+
+            cell1.innerHTML = autoIncrementId2++;
+            cell2.innerHTML = userId;
+            cell3.innerHTML = visualizationId;
+            cell4.innerHTML = columns;
+            cell5.innerHTML = sequenceNumber;
+            cell6.innerHTML = isActive;
+            cell6.innerHTML = '<button class="edit-button" onclick="editRow2(this)">Edit</button>';
+
+            form2.reset();
+            closeForm2();
+        }
+
+        function editRow2(editButton) {
+            var formPopup2 = document.querySelector('.form-popup2');
+            formPopup2.style.display = 'block';
+
+            var form2 = document.getElementById('myForm2');
+            var row2 = editButton.parentNode.parentNode;
+            var cells2 = row2.getElementsByTagName('td');
+
+            form2.userId.value = cells2[1].innerHTML;
+            form2.visualizationId.value = cells2[2].innerHTML;
+            form2.columns.value = cells2[3].innerHTML;
+            form2.sequenceNumber.value = cells2[4].innerHTML;
+            form2.is_active.checked = (cells2[5].innerHTML === 'Yes');
+        }
+
+        function updateRow2(updateButton) {
+            var form2 = document.getElementById('myForm2');
+            var row2 = updateButton.parentNode.parentNode;
+            var cells2 = row2.getElementsByTagName('td');
+
+            cells2[1].innerHTML = form2.userId.value;
+            cells2[2].innerHTML = form2.visualizationId.value;
+            cells2[3].innerHTML = form2.columns.value;
+            cells2[4].innerHTML = form2.sequenceNumber.value;
+            cells2[5].innerHTML = form2.is_active.checked ? 'Yes' : 'No';
+
+            form2.reset();
+            closeForm2();
+        }
+    </script>
+</head>
+<body>
+    <h1>Table 1</h1>
+    <button class="add-button" onclick="addRow1()">Add Row</button>
+    <table id="myTable1">
+        <tr>
+            <th>ID</th>
+            <th>Slug</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Is Active</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>slug1</td>
+            <td>title1</td>
+            <td>description1</td>
+            <td>Yes</td>
+            <td><button class="edit-button" onclick="editRow1(this)">Edit</button></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>slug2</td>
+            <td>title2</td>
+            <td>description2</td>
+            <td>No</td>
+            <td><button class="edit-button" onclick="editRow1(this)">Edit</button></td>
+        </tr>
+    </table>
+
+    <div class="form-popup form-popup1">
+        <form id="myForm1">
+            <label for="slug">Slug:</label>
+            <input type="text" id="slug" name="slug" required>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required>
+            <label for="is_active">Is Active:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="is_active" name="is_active">
+                <span class="toggle-slider"></span>
+            </label>
+            <button type="button" class="update-button" onclick="updateRow1(this)">Update</button>
+            <button type="button" onclick="saveData1()">Save</button>
+            <button type="button" onclick="closeForm1()">Close</button>
+        </form>
+    </div>
+
+    <h1>Table 2</h1>
+    <button class="add-button" onclick="addRow2()">Add Row</button>
+    <table id="myTable2">
+        <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Visualization ID</th>
+            <th>Columns</th>
+            <th>Sequence Number</th>
+            <th>Is Active</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>user1</td>
+            <td>visualization1</td>
+            <td>columns1</td>
+            <td>1</td>
+            <td>Yes</td>
+            <td><button class="edit-button" onclick="editRow2(this)">Edit</button></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>user2</td>
+            <td>visualization2</td>
+            <td>columns2</td>
+            <td>2</td>
+            <td>No</td>
+            <td><button class="edit-button" onclick="editRow2(this)">Edit</button></td>
+        </tr>
+    </table>
+
+    <div class="form-popup form-popup2">
+        <form id="myForm2">
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" required>
+            <label for="visualizationId">Visualization ID:</label>
+            <input type="text" id="visualizationId" name="visualizationId" required>
+            <label for="columns">Columns:</label>
+            <input type="text" id="columns" name="columns" required>
+            <label for="sequenceNumber">Sequence Number:</label>
+            <input type="text" id="sequenceNumber" name="sequenceNumber" required>
+            <label for="is_active">Is Active:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="is_active" name="is_active">
+                <span class="toggle-slider"></span>
+            </label>
+            <button type="button" class="update-button" onclick="updateRow2(this)">Update</button>
+            <button type="button" onclick="saveData2()">Save</button>
+            <button type="button" onclick="closeForm2()">Close</button>
+        </form>
+    </div>
+</body>
+</html>

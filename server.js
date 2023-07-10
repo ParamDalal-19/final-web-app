@@ -1,36 +1,38 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const indexRouter = require('./router.js');
-const cookieParser = require('cookie-parser');
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const indexRouter = require("./router.js");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static("dist"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
 app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'templates'));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "dist"));
 
 // Middleware to set the MIME type for JavaScript files
-app.use('/public', (req, res, next) => {
-  res.setHeader('Content-Type', 'text/javascript');
+app.use("/public", (req, res, next) => {
+  res.setHeader("Content-Type", "text/javascript");
   next();
 });
 
-app.use('/api', indexRouter);
+app.use("/api", indexRouter);
 
 // Handling Errors
 app.use((err, req, res, next) => {

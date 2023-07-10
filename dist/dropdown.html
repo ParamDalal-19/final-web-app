@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Table with Dropdown Menu</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .toggle-switch .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #4CAF50;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    
+    h2, h3 {
+      color: #333;
+    }
+
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+
+    select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .deleteButton {
+      background-color: #f44336;
+    }
+
+    .deleteButton:hover {
+      background-color: #d32f2f;
+    }
+
+    .editButton, .updateButton {
+      background-color: #2196F3;
+    }
+
+    .editButton:hover, .updateButton:hover {
+      background-color: #1976D2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select an Item</h2>
+  <select id="dropdown">
+    <option value="item1" data-chart="Chart 1" data-column="Column 1" data-priority="High">Item 1</option>
+    <option value="item2" data-chart="Chart 2" data-column="Column 2" data-priority="Medium">Item 2</option>
+    <option value="item3" data-chart="Chart 3" data-column="Column 3" data-priority="Low">Item 3</option>
+    <!-- Add more options as needed -->
+  </select>
+
+  <h3>Selected Item Details:</h3>
+  <table id="itemTable">
+    <thead>
+      <tr>
+        <th>Chart</th>
+        <th>Column</th>
+        <th>Priority</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody> <!-- Add tbody element -->
+  </table>
+
+  <button id="updateButton" disabled>Update</button>
+
+  <script>
+    
+    var dropdown = document.getElementById('dropdown');
+    var itemTable = document.getElementById('itemTable');
+    var updateButton = document.getElementById('updateButton');
+    var selectedRow = null;
+    var currentID = 1; // Initial ID value
+
+    dropdown.addEventListener('change', function() {
+      var selectedOption = dropdown.options[dropdown.selectedIndex];
+      var chart = selectedOption.getAttribute('data-chart');
+      var column = selectedOption.getAttribute('data-column');
+      var priority = selectedOption.getAttribute('data-priority');
+
+      var newRow = itemTable.querySelector('tbody').insertRow();
+      newRow.innerHTML = `
+        <td>${chart}</td>
+        <td contenteditable="true">${column}</td>
+        <td contenteditable="true">${priority}</td>
+        <td><button class="deleteButton">Delete</button></td>
+      `;
+
+      newRow.querySelector('.deleteButton').addEventListener('click', function() {
+        itemTable.deleteRow(newRow.rowIndex);
+      });
+
+      newRow.addEventListener('input', function() {
+        updateButton.disabled = false;
+      });
+    });
+
+    updateButton.addEventListener('click', function() {
+      var rows = itemTable.rows;
+      for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var chart = row.cells[0].textContent;
+        var column = row.cells[1].textContent;
+        var priority = row.cells[2].textContent;
+
+        // Perform the update logic here for each row
+        // (e.g., send data to server or update in-memory data)
+
+        updateButton.disabled = true;
+      }
+    });
+
+    function addRow() {
+      var table = document.getElementById('myTable');
+      var newRow = table.querySelector('tbody').insertRow();
+      newRow.innerHTML = `
+        <td contenteditable="false">${currentID}</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td>
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </td>
+        <td>
+          <button class="editButton">Edit</button>
+          <button class="updateButton">Update</button>
+        </td>
+      `;
+
+      currentID++; // Increment the ID value
+
+      newRow.querySelector('.editButton').addEventListener('click', function() {
+        editRow(this);
+      });
+
+      newRow.querySelector('.updateButton').addEventListener('click', function() {
+        updateRow(this);
+      });
+    }
+
+    function editRow(button) {
+      var row = button.parentNode.parentNode;
+      row.querySelectorAll('td[contenteditable="true"]').forEach(function(cell) {
+        cell.setAttribute('contenteditable', 'true');
+      });
+    }
+
+    function updateRow(button) {
+      var row = button.parentNode.parentNode;
+      row.querySelectorAll('td[contenteditable="true"]').forEach(function(cell) {
+        cell.setAttribute('contenteditable', 'false');
+      });
+    }
+  </script>
+</body>
+</html>

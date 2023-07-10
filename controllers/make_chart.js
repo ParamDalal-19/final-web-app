@@ -1,187 +1,3 @@
-// // Defining CONSTANTS
-// const CONFIG = { responsive: true };
-// const LAYOUT = { height: 500 };
-
-// function randomRGB(num = 255) {
-//   // This function produces a random color
-//   return `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-//     Math.random() * 255
-//   )},${Math.floor(Math.random() * 255)})`;
-// }
-
-// function randomRGBA(num = 255) {
-//   // This function produces a random color with random opacity
-//   return `rgba(${Math.floor(Math.random() * 255)},${Math.floor(
-//     Math.random() * 255
-//   )},${Math.floor(Math.random() * 255)},${Math.random()})`;
-// }
-
-// function bubble_Chart(
-//     data,
-//     xAttr = "",
-//     yAttr = "",
-//     title = "",
-//     mode = "markers"
-// ) {
-//     // the function takes an api which from where we request data
-//     // After getting the data, we extract the attributes we want to
-//     // show on the x-axis and y-axis of the bar chart
-//     // Finally we give the graph a title as the description
-
-//     try {
-//         console.log('Passed Data below');
-//         // console.log(data)
-//         let xarr = [];
-//         let yarr = [];
-//         const traces = [];
-//         // for (i in data) {
-//         xarr = (data.map(ele => ele[xAttr]));
-//         yarr = (data.map(ele => ele[yAttr]));
-//         traces.push({
-//             x: xarr,
-//             y: yarr,
-//             mode: mode,
-//             marker: {
-//                 color: `${randomRGB()}`,
-//                 size: yarr.map((num) => Math.max(15, Math.ceil(num / 5))),
-//             },
-//             sizemode: "area",
-//             hovertemplate: `%{x}:%{y}`,
-//             hoveron: "x+y"
-//         });
-//         // }
-//         console.log("Arrays are", xarr, yarr);
-//         // console.log(traces);
-
-//         const layout = {
-//             ...LAYOUT,
-//             title: title,
-//             xaxis: {
-//                 title: xAttr,
-//             },
-//             yaxis: {
-//                 title: yAttr,
-//             },
-//             margin: {
-//                 r: 30,
-//             },
-//         };
-//         const result = { data: traces, layout: layout, config: CONFIG };
-//         return result;
-//         // Plotly.newPlot("myPlot", traces, layout, CONFIG);
-//     } catch {
-//         throw new Error("Error in the plot making function. Please check if the input or the layout are prepared properly.");
-//     }
-// }
-
-// function process_x_bar_chart(data, xAttr="", x2="", yAttr="", title="", orientation='none')
-// {
-//   console.log('Passed Data below');
-//   // console.log(data)
-//   let xarr = [];
-//   let yarr = [];
-//   let xarr2 = [];
-//   const traces = [];
-//   xarr = (data.map(ele => ele[xAttr]));
-//   yarr = (data.map(ele => ele[yAttr]));
-//   xarr2 = (data.map(ele => ele[x2]))
-//   console.log(xarr,xarr2,yarr)
-//   traces.push({
-//     x: orientation != "h" ? xarr: yarr,
-//     y: orientation != "h" ? yarr : xarr,
-//     type: "bar",
-//     orientation: orientation,
-//     hovertemplate: `%{x}:%{y}`,
-//     hoverinfo: 'x+y',
-//     transforms: [{
-//       type: 'groupby',
-//       groups: xarr2,}],
-//     width: 0.5,
-//   });
-
-//   console.log(traces);
-//   const layout = {
-//     ...LAYOUT,
-//     barmode: 'group',
-//     title: title,
-//     xaxis: {
-//       title: xAttr,
-//       tickangle: -15,
-//       tickfont: {
-//       size: 13,
-//     },
-//     },
-//     yaxis: {
-//       title: yAttr,
-//     },
-//   };
-//   const result = { data: traces, layout: layout, config: CONFIG };
-
-//   return result;
-// }
-
-// function process_chart(data, chart_type, xAttr="", yAttr="", title="", xAttr2="", orientation='none') {
-//     console.log("me yaha ghusa");
-//     switch (chart_type) {
-//         case "bubble_chart":
-//             return bubble_Chart(data, xAttr, yAttr, title);
-//         case "bar_chart":
-//             return process_x_bar_chart(data, xAttr, xAttr2, yAttr, title, orientation);
-//         default:
-//             throw new Error("Invalid chart type");
-//     }
-// }
-
-// let charts = new Map();
-// charts.set("top_ten_most_clicked_sneaker_brands", {
-//     bubble_chart: bubble_Chart,
-//     xAttr: "Brand",
-//     yAttr: "Number of Times Clicked",
-//     title: "Brand vs Number of Times Clicked",
-// });
-// charts.set("most_clicked_coffee_machines", {
-//     bar_chart: process_x_bar_chart,
-//     xAttr: "Brand",
-//     xAttr2: "Vendor",
-//     yAttr: "Number of Clicks",
-//     title: "Brand per Vendor vs Number of Times Clicked",
-// });
-
-// exports.create_chart = async (data, viz_id, chart_type, containerId, callback) => {
-//     try {
-//       if (charts.has(viz_id)) {
-//         let chart = charts.get(viz_id);
-//         if (chart_type === "bar_chart" || chart_type === "bubble_chart") {
-//           const x = chart.xAttr;
-//           const x2 = chart.xAttr2;
-//           const y = chart.yAttr;
-//           const title = chart.title;
-//           const result = process_chart(data, chart_type, x, y, title, x2);
-//           console.log("result mil gaya");
-//           // Plotly.newPlot(containerId, result.data, result.layout, result.config);
-//           callback(null, result); // Pass the result to the callback
-//         } else {
-//           const error = new Error("Invalid Chart Type");
-//           console.log("ERROR: Invalid Chart Type");
-//           callback(error, null); // Pass the error to the callback
-//         }
-//       } else {
-//         const error = new Error("Invalid View");
-//         console.log("ERROR: Invalid View");
-//         callback(error, null); // Pass the error to the callback
-//       }
-//     } catch (err) {
-//       console.log(err);
-//       const error = new Error("An error occurred");
-//       callback(error, null); // Pass the error to the callback
-//     }
-//   };
-
-// THIS IS NEW ONE :-
-// const viz = require("viz");
-// import {get_vis_chart_data} from "vis_res";
-
-// Defining CONSTANTS
 const CONFIG = { responsive: true };
 const LAYOUT = {
   height: 500,
@@ -204,96 +20,64 @@ function randomRGBA(num = 255) {
   )},${Math.floor(Math.random() * 255)},${Math.random()})`;
 }
 
-///////////////////////////////////////
-//   VISUALIZATION FUNCTIONS BELOW   //
-///////////////////////////////////////
+function barChart(data, title = "", barmode = "group", orientation = "none") {
+  
+  const firstObject = data[0];
+  const columnNames = Object.keys(firstObject);
 
-function barChart(
-  data,
-  xAttr = "",
-  yAttr = "",
-  title = "",
-  barmode = "group",
-  orientation = "none"
-) {
-  // the function takes an api which from where we request data
-  // After getting the data, we extract the attributes we want to
-  // show on the x-axis and y-axis of the bar chart
-  // Finally we give the graph a title as the description
-  // If we needed, we can add traces where the barmode will be handy
+  const xatribute = columnNames[0];
+  const yatribute = columnNames[1];
 
-  // try {
-  // console.log('Passed Data below');
-  // console.log(data)
   let xarr = [];
   let yarr = [];
   const traces = [];
-  // for (i in data) {
-  xarr = data.map((ele) => ele[xAttr]);
-  yarr = data.map((ele) => ele[yAttr]);
-  // xarr = data.map(elem => elem[xAttr]);
-  // yarr = data.map(elem => elem[yAttr]);
-  // console.log("Arrays are", xarr, yarr);
+
+  xarr = data.map((ele) => ele[xatribute]);
+  yarr = data.map((ele) => ele[yatribute]);
+
   traces.push({
     x: orientation != "h" ? xarr : yarr,
     y: orientation != "h" ? yarr : xarr,
     type: "bar",
-    // marker: {
-    //   color: `${randomRGB()}`,
-    // },
     orientation: orientation,
     hovertemplate: `%{x}:%{y}`,
     hoverinfo: "x+y",
   });
-  // }
-  // console.log(traces);
   const layout = {
     ...LAYOUT,
     title: title,
     xaxis: {
-      title: xAttr,
+      title: xatribute,
     },
     yaxis: {
-      title: yAttr,
+      title: yatribute,
     },
   };
   const result = { data: traces, layout: layout, config: CONFIG };
-  // console.log("here is the result for chart :-",result)
   return result;
-  // Plotly.newPlot("myPlot", traces, layout, CONFIG);
-  // } catch {
-  //   throw new Error("Error in the plot making function. Please check if the input or the layout are prepared properly.");
-  // }
 }
 
-function barhChart(
-  data,
-  xAttr = "",
-  yAttr = "",
-  title = "",
-  orientation = "h"
-) {
-  barChart(data, xAttr, yAttr, title, orientation);
+function barhChart(data, title = "", orientation = "h") {
+  barChart(data, title, orientation);
 }
 
-function process_x_bar_chart(
-  data,
-  xAttr = "",
-  x2 = "",
-  yAttr = "",
-  title = "",
-  orientation = "none"
-) {
-  // console.log('Passed Data below');
-  // console.log(data)
+function process_x_bar_chart(data, title = "", orientation = "none") {
+
+  const firstObject = data[0];
+  const columnNames = Object.keys(firstObject);
+
+  const xatribute = columnNames[1];
+  const x2atribute = columnNames[0];
+  const yatribute = columnNames[2];
+
   let xarr = [];
   let yarr = [];
   let xarr2 = [];
   const traces = [];
-  xarr = data.map((ele) => ele[xAttr]);
-  yarr = data.map((ele) => ele[yAttr]);
-  xarr2 = data.map((ele) => ele[x2]);
-  // console.log(xarr,xarr2,yarr)
+  xarr = data.map((ele) => ele[xatribute]);
+  yarr = data.map((ele) => ele[yatribute]);
+  xarr2 = data.map((ele) => ele[x2atribute]);
+  
   traces.push({
     x: orientation != "h" ? xarr : yarr,
     y: orientation != "h" ? yarr : xarr,
@@ -310,53 +94,45 @@ function process_x_bar_chart(
     width: 0.5,
   });
 
-  // console.log(traces);
   const layout = {
     ...LAYOUT,
     barmode: "group",
     title: title,
     xaxis: {
-      title: xAttr,
+      title: xatribute,
       tickangle: -30,
       tickfont: {
         size: 10,
       },
     },
     yaxis: {
-      title: yAttr,
+      title: yatribute,
     },
   };
   const result = { data: traces, layout: layout, config: CONFIG };
-  // console.log("here is the result for chart :-",result)
   return result;
 }
 
-function process_x_bubble_chart(
-  data,
-  xAttr = "",
-  x2 = "",
-  yAttr = "",
-  title = "",
-  orientation = "none"
-) {
-  // console.log('Passed Data below');
-  // console.log(data)
+function process_x_bubble_chart(data, title = "", orientation = "none") {
+
+  const firstObject = data[0];
+  const columnNames = Object.keys(firstObject);
+
+  const xatribute = columnNames[1];
+  const x2atribute = columnNames[0];
+  const yatribute = columnNames[2];
+
   let xarr = [];
   let yarr = [];
   let xarr2 = [];
   const traces = [];
-  xarr = data.map((ele) => ele[xAttr]);
-  yarr = data.map((ele) => ele[yAttr]);
-  xarr2 = data.map((ele) => ele[x2]);
-  // let grouped_x = [];
-  // for (let i = 0; i < yarr.length; i++) {
-  //   grouped_x.push((`(${xarr[i]}, ${xarr2[i]})`));
-  // }
-  // console.log(xarr,x2,yarr)
+  xarr = data.map((ele) => ele[xatribute]);
+  yarr = data.map((ele) => ele[yatribute]);
+  xarr2 = data.map((ele) => ele[x2atribute]);
+
   traces.push({
     x: orientation != "h" ? xarr : yarr,
     y: orientation != "h" ? yarr : xarr,
-    // type: "bar",
     mode: "markers",
     marker: {
       size: yarr.map((num) => Math.min(Math.max(15, Math.ceil(num / 2)), 40)),
@@ -373,19 +149,19 @@ function process_x_bubble_chart(
     width: 0.5,
   });
 
-  console.log(traces);
+  // console.log(traces);
   const layout = {
     ...LAYOUT,
     title: title,
     xaxis: {
-      title: xAttr,
+      title: xatribute,
       tickangle: -30,
       tickfont: {
         size: 10,
       },
     },
     yaxis: {
-      title: yAttr,
+      title: yatribute,
     },
   };
   const result = { data: traces, layout: layout, config: CONFIG };
@@ -393,60 +169,48 @@ function process_x_bubble_chart(
   return result;
 }
 
-function bubbleChart(
-  data,
-  xAttr = "",
-  yAttr = "",
-  title = "",
-  mode = "markers"
-) {
-  // the function takes an api which from where we request data
-  // After getting the data, we extract the attributes we want to
-  // show on the x-axis and y-axis of the bar chart
-  // Finally we give the graph a title as the description
-
+function bubbleChart(data, title = "", mode = "markers") {
   try {
-    console.log("Passed Data below");
-    // console.log(data)
+
+    const firstObject = data[0];
+    const columnNames = Object.keys(firstObject);
+
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
     let xarr = [];
     let yarr = [];
     const traces = [];
-    // for (i in data) {
-    xarr = data.map((ele) => ele[xAttr]);
-    yarr = data.map((ele) => ele[yAttr]);
+
+    xarr = data.map((ele) => ele[xatribute]);
+    yarr = data.map((ele) => ele[yatribute]);
     traces.push({
       x: xarr,
       y: yarr,
       mode: mode,
       marker: {
-        // color: `${randomRGB()}`,
         size: yarr.map((num) => Math.min(Math.max(15, Math.ceil(num / 5)), 40)),
       },
       sizemode: "area",
       hovertemplate: `%{x}:%{y}`,
       hoveron: "x+y",
     });
-    // }
-    // console.log("Arrays are", xarr, yarr);
-    // console.log(traces);
 
     const layout = {
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
-        title: yAttr,
+        title: yatribute,
       },
       margin: {
         r: 30,
       },
     };
     const result = { data: traces, layout: layout, config: CONFIG };
-    // console.log("here is the result for chart :-",result)
+
     return result;
-    // Plotly.newPlot("myPlot", traces, layout, CONFIG);
   } catch {
     throw new Error(
       "Error in the plot making function. Please check if the input or the layout are prepared properly."
@@ -454,33 +218,28 @@ function bubbleChart(
   }
 }
 
-function pieChart(data, labelAttr = "", valueAttr = "", title = "") {
+function pieChart(data, title) {
   try {
-    console.log("Passed Data below");
-    console.log(data);
+
+    const firstObject = data[0];
+    const columnNames = Object.keys(firstObject);
+
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+
     let xarr = [];
     let yarr = [];
     const traces = [];
-    // for (i in data) {
-    xarr = data.map((ele) => ele[labelAttr]);
-    yarr = data.map((ele) => ele[valueAttr]);
-    console.log("Arrays are", xarr, yarr);
+    xarr = data.map((ele) => ele[xatribute]);
+    yarr = data.map((ele) => ele[yatribute]);
+    // console.log("Arrays are", xarr, yarr);
     traces.push({
       labels: xarr,
       values: yarr,
       type: "pie",
-      // marker: {
-      //   colors: yarr.map((item) => `${randomRGB()}`),
-      // },
       hoverinfo: "label+value",
       textinfo: "label+percent",
-      // domain: {
-      //   row: parseInt(i / 2),
-      //   col: i % 2,
-      // },
     });
-    // }
-    console.log(traces);
 
     const layout = {
       ...LAYOUT,
@@ -490,7 +249,6 @@ function pieChart(data, labelAttr = "", valueAttr = "", title = "") {
 
     const result = { data: traces, layout: layout, config: CONFIG };
     return result;
-    // Plotly.newPlot("myPlot", traces, layout, CONFIG);
   } catch {
     throw new Error(
       "Error in the plot making function. Please check if the input or the layout are prepared properly."
@@ -498,23 +256,24 @@ function pieChart(data, labelAttr = "", valueAttr = "", title = "") {
   }
 }
 
-function lineChart(
-  data,
-  xAttr = "X-axis",
-  yAttr = "Y-axis",
-  title = "Example Graph",
-  mode = "lines"
-) {
+function lineChart(data, title, mode = "lines") {
   try {
-    console.log("Passed Data below");
-    console.log(data);
+    // Get the first object in the data array to extract the column names
+    const firstObject = data[0];
+
+    // Extract the column names using Object.keys()
+    const columnNames = Object.keys(firstObject);
+
+    // Store the column names in separate variables
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+
     let xarr = [];
     let yarr = [];
     const traces = [];
-    // for (i in data) {
-    xarr = data.map((ele) => ele[xAttr]);
-    yarr = data.map((ele) => ele[yAttr]);
-    console.log("Arrays are", xarr, yarr);
+
+    xarr = data.map((ele) => ele[xatribute]);
+    yarr = data.map((ele) => ele[yatribute]);
     traces.push({
       x: xarr,
       y: yarr,
@@ -535,16 +294,15 @@ function lineChart(
       hoverinfo: "x+y",
     });
     // }
-    console.log(traces);
 
     const layout = {
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
-        title: yAttr,
+        title: yatribute,
       },
       margin: {
         r: 30,
@@ -553,7 +311,6 @@ function lineChart(
 
     const result = { data: traces, layout: layout, config: CONFIG };
     return result;
-    // Plotly.newPlot("myPlot", traces, layout, CONFIG);
   } catch {
     throw new Error(
       "Error in the plot making function. Please check if the input or the layout are prepared properly."
@@ -561,23 +318,25 @@ function lineChart(
   }
 }
 
-function scatterPlot(
-  data,
-  xAttr = "X-axis",
-  yAttr = "Y-axis",
-  title = "Example Graph",
-  mode = "markers"
-) {
+function scatterPlot(data, title, mode = "markers") {
   try {
-    console.log("Passed Data below");
-    console.log(data);
+    // Get the first object in the data array to extract the column names
+    const firstObject = data[0];
+
+    // Extract the column names using Object.keys()
+    const columnNames = Object.keys(firstObject);
+
+    // Store the column names in separate variables
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+
     let xarr = [];
     let yarr = [];
     const traces = [];
     // for (i in data) {
-    xarr = data.map((ele) => ele[xAttr]);
-    yarr = data.map((ele) => ele[yAttr]);
-    console.log("Arrays are", xarr, yarr);
+    xarr = data.map((ele) => ele[xatribute]);
+    yarr = data.map((ele) => ele[yatribute]);
+    // console.log("Arrays are", xarr, yarr);
     traces.push({
       x: xarr,
       y: yarr,
@@ -598,16 +357,15 @@ function scatterPlot(
       hoverinfo: "x+y",
     });
     // }
-    console.log(traces);
 
     const layout = {
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
-        title: yAttr.replace("_", " "),
+        title: yatribute.replace("_", " "),
         pad: 10,
       },
       plot_bgcolor: "rgb(250, 250, 250)",
@@ -619,7 +377,6 @@ function scatterPlot(
 
     const result = { data: traces, layout: layout, config: CONFIG };
     return result;
-    // Plotly.newPlot("myPlot", traces, layout, CONFIG);
   } catch {
     throw new Error(
       "Error in the plot making function. Please check if the input or the layout are prepared properly."
@@ -627,18 +384,28 @@ function scatterPlot(
   }
 }
 
-function dotPlot(data, xAttr = "", yAttr = "", title = "", mode = "markers") {
-  scatterPlot(data, yAttr, xAttr, title, mode);
+function dotPlot(data, title, mode = "markers") {
+  scatterPlot(data, title, mode);
 }
 
-function areaOverlayPlot(data, xAttr = "", yAttr = "", title = "") {
+function areaOverlayPlot(data, title) {
   try {
+    // Get the first object in the data array to extract the column names
+    const firstObject = data[0];
+
+    // Extract the column names using Object.keys()
+    const columnNames = Object.keys(firstObject);
+
+    // Store the column names in separate variables
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+
     const xarr = [];
     const yarr = [];
     const traces = [];
     for (i in data) {
-      xarr.push(data[i].map((item) => item[xAttr]));
-      yarr.push(data[i].map((item) => item[yAttr]));
+      xarr.push(data[i].map((item) => item[xatribute]));
+      yarr.push(data[i].map((item) => item[yatribute]));
       traces.push({
         x: xarr[i],
         y: yarr[i],
@@ -651,10 +418,10 @@ function areaOverlayPlot(data, xAttr = "", yAttr = "", title = "") {
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
-        title: yAttr,
+        title: yatribute,
       },
       margin: {
         r: 30,
@@ -670,20 +437,24 @@ function areaOverlayPlot(data, xAttr = "", yAttr = "", title = "") {
   }
 }
 
-function areaStackedPlot(
-  data,
-  xAttr = "",
-  yAttr = "",
-  title = "",
-  groupnorm = "percent"
-) {
+function areaStackedPlot(data, title, groupnorm = "percent") {
   try {
+    // Get the first object in the data array to extract the column names
+    const firstObject = data[0];
+
+    // Extract the column names using Object.keys()
+    const columnNames = Object.keys(firstObject);
+
+    // Store the column names in separate variables
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+
     const xarr = [];
     const yarr = [];
     const traces = [];
     for (i in data) {
-      xarr.push(data[i].map((item) => item[xAttr]));
-      yarr.push(data[i].map((item) => item[yAttr]));
+      xarr.push(data[i].map((item) => item[xatribute]));
+      yarr.push(data[i].map((item) => item[yatribute]));
       traces.push({
         x: xarr[i],
         y: yarr[i],
@@ -696,10 +467,10 @@ function areaStackedPlot(
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
-        title: yAttr,
+        title: yatribute,
       },
     };
     const result = { data: traces, layout: layout, config: CONFIG };
@@ -712,15 +483,20 @@ function areaStackedPlot(
   }
 }
 
-function histogram(data, xAttr = "", title = "", barmode = "overlay") {
+function histogram(data, title, barmode = "overlay") {
   try {
-    // const xarr = [];
+    // Get the first object in the data array to extract the column names
+    const firstObject = data[0];
+
+    // Extract the column names using Object.keys()
+    const columnNames = Object.keys(firstObject);
+
+    // Store the column names in separate variables
+    const xatribute = columnNames[0];
+
     const traces = [];
     let opacity = 0.1;
     for (i in data) {
-      console.log(i);
-      console.log(data[i]);
-      // xarr.push(data[i]);
       traces.push({
         type: "histogram",
         name: `${i}`,
@@ -740,7 +516,7 @@ function histogram(data, xAttr = "", title = "", barmode = "overlay") {
       ...LAYOUT,
       title: title,
       xaxis: {
-        title: xAttr,
+        title: xatribute,
       },
       yaxis: {
         title: "count",
@@ -759,80 +535,176 @@ function histogram(data, xAttr = "", title = "", barmode = "overlay") {
 }
 
 let charts = new Map();
-list_special_views = ["most_clicked_coffee_machines", "most_clicked_product"];
-// top_ten_most_clicked_sneaker_brands
+list_special_views = [
+  "most_clicked_coffee_machines",
+  "most_clicked_product",
+  "category_views_per_month",
+];
+
 charts.set("most_clicked_coffee_machines", {
   bar_chart: process_x_bar_chart,
   bubble_chart: process_x_bubble_chart,
-  xAttr: "Brand",
-  xAttr2: "Vendor",
-  yAttr: "Number of Clicks",
-  title: "Brand per Vendor vs Number of Times Clicked",
 });
-// mmost_frequent_product_clicks_by_category
 charts.set("most_frequent_product_clicks_by_category", {
   pie_chart: pieChart,
   bar_chart: barChart,
   bubble_chart: bubbleChart,
-  xAttr: "Category Name",
-  yAttr: "Click Count",
-  title: "Number of Clicks per Category",
 });
-// most_common_experience_type_for_sneakers
 charts.set("most_common_experience_type_for_sneakers", {
   pie_chart: pieChart,
   bar_chart: barChart,
   bubble_chart: bubbleChart,
-  xAttr: "Experience Type",
-  yAttr: "Use Count",
-  title: "Number of Clicks per Category",
 });
-// top_ten_most_clicked_sneaker_brands
 charts.set("top_ten_most_clicked_sneaker_brands", {
   bubble_chart: bubbleChart,
   bar_chart: barChart,
-  xAttr: "Brand",
-  yAttr: "Number of Times Clicked",
-  title: "Top 10 Sneaker Brand Clicked",
 });
-// most_clicked_product
 charts.set("most_clicked_product", {
   bar_chart: process_x_bar_chart,
   bubble_chart: process_x_bubble_chart,
-  xAttr: "Product",
-  xAttr2: "Category",
-  yAttr: "Number Of Times Clicked",
-  title: "Product with most Clicks",
 });
 
-exports.create_chart = (data, viz_id, chart_type, callback) => {
+charts.set("average_category_view_per_session", {
+  // key_value: keyValue,
+});
+
+charts.set("average_number_of_interactions_per_session", {});
+charts.set("average_product_view_per_session", {});
+charts.set("average_session_duration", {});
+charts.set("average_session_duration_screenwise", {
+  pie_chart: pieChart,
+});
+charts.set("average_time_spent_by_category", {
+  pie_chart: pieChart,
+});
+charts.set("average_time_spent_on_experience", {
+  pie_chart: pieChart,
+  bar_chart: barChart,
+});
+charts.set("average_time_spent_on_product", {
+  bar_chart: barChart,
+});
+charts.set("average_user_session_ended_per_session", {});
+charts.set("average_user_session_started_per_session", {});
+charts.set("average_website_started_per_session", {});
+charts.set("avg_num_of_categories_viewed_per_session", {});
+charts.set("avg_num_of_products_viewed_per_session", {});
+charts.set("category_views_per_day", {
+  line_chart: lineChart,
+});
+charts.set("category_views_per_month", {
+  bubble_chart: process_x_bubble_chart,
+});
+charts.set("category_views_per_week", {
+  bubble_chart: process_x_bubble_chart,
+});
+charts.set("category_view_percentage", {});
+charts.set("coffee_machine_interest_by_country", {
+  bar_chart: barChart,
+  bubble_chart: process_x_bubble_chart,
+  pie_chart: pieChart,
+});
+charts.set("coffee_machine_interest_by_power", {});
+charts.set("coffee_machine_interest_by_pressure", {});
+charts.set("events_by_day_of_week", {
+  line_chart: lineChart,
+});
+charts.set("event_distribution_by_month", {
+  scatter_plot: scatterPlot,
+});
+charts.set("event_distribution_by_week", {
+  scatter_plot: scatterPlot,
+});
+charts.set("most_active_time_of_day_for_user_interactions", {
+  dot_plot: dotPlot,
+  pie_chart: pieChart,
+  bar_chart: barChart,
+});
+charts.set("most_clicked_coffee_machine_brands", {
+  bar_chart: barChart,
+  bubble_chart: process_x_bubble_chart,
+});
+charts.set("most_clicked_coffee_machine_by_material", {});
+charts.set("most_clicked_coffee_machine_by_price", {});
+charts.set("most_clicked_sneakers_by_sole_type", {});
+charts.set("most_clicked_sneaker_brands", {});
+charts.set("most_clicked_sneaker_by_price", {
+  pie_chart: pieChart,
+});
+charts.set("most_clicked_sneaker_vendors", {
+  bubble_chart: bubbleChart,
+});
+charts.set("most_common_coffee_machine_capacities", {});
+charts.set("most_common_coffee_machine_color", {});
+charts.set("most_common_coffee_machine_weights", {});
+charts.set("most_common_day_category_view_event", {});
+charts.set("most_common_day_product_view_event", {});
+charts.set("most_common_day_session_ended_event", {});
+charts.set("most_common_day_session_started_event", {});
+charts.set("most_common_day_website_started", {});
+charts.set("most_common_experience_type_for_coffee_machines", {});
+charts.set("most_popular_interaction_times", {});
+charts.set("percentage_user_session_event", {});
+charts.set("percetange_product_views_events", {});
+charts.set("percetange_user_session_ended_event", {});
+charts.set("product_views_per_day", {
+  scatter_plot: scatterPlot,
+});
+charts.set("product_views_per_month", {
+  bubble_chart: bubbleChart,
+});
+charts.set("product_views_per_week", {});
+charts.set("time_of_day_category_view", {});
+charts.set("time_of_day_experience_started", {});
+charts.set("time_of_day_product_view", {});
+charts.set("time_of_day_session_ended", {});
+charts.set("time_of_day_session_started", {});
+charts.set("time_spent_by_category", {});
+charts.set("time_spent_on_experience", {});
+charts.set("time_spent_on_product", {});
+charts.set("top_coffee_machine_brands_per_vendor", {});
+charts.set("top_five_least_active_devices_screenwise", {
+  pie_chart: pieChart,
+});
+charts.set("top_five_most_active_devices_screenwise", {});
+charts.set("top_five_user_interest_coffee_machine_vendor", {});
+charts.set("top_five_user_interest_sneaker_vendor", {});
+charts.set("top_sneaker_brands_per_vendor", {});
+charts.set("top_ten_most_clicked_coffee_machine_brands", {});
+charts.set("top_ten_most_clicked_coffee_machine_vendors", {});
+charts.set("top_ten_most_clicked_sneaker_vendors", {});
+charts.set("top_ten_most_popular_products_by_clicks", {});
+charts.set("total_sessions", {});
+charts.set("total_sessions_screenwise", {});
+charts.set("user_activity_peak_hour", {});
+charts.set("user_engagement_day_of_week", {});
+charts.set("user_preference_coffee_machine_type", {});
+charts.set("user_preference_color_coffee_machine", {});
+charts.set("user_preference_color_sneakers", {});
+charts.set("user_preference_sneaker_type", {});
+charts.set("user_sessions_ended_per_day", {});
+charts.set("user_sessions_ended_per_month", {});
+charts.set("user_sessions_ended_per_week", {});
+charts.set("user_sessions_per_day", {});
+charts.set("user_sessions_per_month", {});
+charts.set("user_sessions_per_week", {});
+charts.set("website_started_events_percentage_view", {});
+charts.set("website_started_events_per_day_view", {});
+charts.set("website_started_events_per_month_view", {});
+charts.set("website_started_events_per_week_view", {});
+
+exports.create_chart = (data, viz_id, title_name, chart_type, callback) => {
   if (charts.has(viz_id)) {
     let chart = charts.get(viz_id);
-    // console.log(data);
     if (chart.hasOwnProperty(chart_type)) {
-      if (
-        list_special_views.includes(viz_id)
-        // (chart_type == "bar_chart" &&
-        //   viz_id == "most_clicked_coffee_machines") ||
-        // (chart_type == "bubble_chart" &&
-        //   viz_id == "most_clicked_coffee_machines")
-      ) {
-        // console.log("pehle loop me gaya");
-        x = chart["xAttr"];
-        x2 = chart["xAttr2"];
-        y = chart["yAttr"];
-        title = chart["title"];
-        let chartResult = chart[chart_type](data, x, x2, y, title);
-        // console.log("result in making function mil gaya now sending to router", chartResult);
-        callback(chartResult); // Call the callback function with the result
+      if (list_special_views.includes(viz_id)) {
+        let chartResult = chart[chart_type](data, title_name);
+        
+        callback(chartResult); 
       } else {
-        // console.log("dusre loop me gaya");
-        x = charts.get(viz_id)["xAttr"];
-        y = charts.get(viz_id)["yAttr"];
-        title = charts.get(viz_id)["title"];
-        let chartResult = chart[chart_type](data, x, y, title);
-        // console.log("result in making function mil gaya now sending to frontend", chartResult);
-        callback(chartResult); // Call the callback function with the result
+        title = title_name;
+        let chartResult = chart[chart_type](data, title);
+        callback(chartResult); 
       }
     } else {
       console.log("ERROR: Invalid Chart Type");

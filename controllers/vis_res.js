@@ -25,80 +25,78 @@ exports.get_vis_data = (email, callback) => {
 };
 
 exports.get_vis_chart_data = async (result, callback) => {
-  const jsonData = result;
-  console.log("data is here:", jsonData);
+  try {
+    const jsonData = result;
 
-  // Iterate over the titles array
-  for (let i = 0; i < jsonData.length; i++) {
-    const title_name = jsonData[i].visualizationId;
-    console.log("slug_name:", title_name);
-    const query = `SELECT * FROM visualization WHERE title = ${db.escape(
-      title_name
-    )}`;
-    console.log("query:", query);
+    for (let i = 0; i < jsonData.length; i++) {
+      const title_id = jsonData[i].visualizationId;
 
-    // Wrap the db.query inside a Promise to make it awaitable
-    const dbQueryPromise = new Promise((resolve, reject) => {
-      db.query(query, (err, result) => {
-        if (err) {
-          console.log("Error in db.query");
-          reject(err);
-        } else {
-          console.log("Result received:", result);
-          if (result.length > 0) {
-            const slug = result[0].slug;
-            jsonData[i].slug_name = slug;
-            console.log("updated json data :-", jsonData);
+      const find_vis_id = `SELECT title FROM visualization WHERE id = "${title_id}"`;
+
+      const res_id = await new Promise((resolve, reject) => {
+        db.query(find_vis_id, (error, res) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(res);
           }
-          resolve();
-        }
+        });
       });
-    });
 
-    // Wait for the dbQueryPromise to resolve before proceeding to the next iteration
-    await dbQueryPromise;
-  }
+      const title_name = res_id[0]["title"];
 
-  const getViewResults = (visualizationId) => {
-    return new Promise((resolve, reject) => {
-      console.log("ID USED FOR VIEW :-", visualizationId);
-      //   comd = `SELECT * FROM ${visualizationId}`
-      //   console.log("command :-",comd);
-      db.query(`SELECT * FROM ${visualizationId}`, (err, result) => {
-        if (err) {
-          console.log("THIS IS THE ERROR :-", err);
-          reject(err);
-        } else {
-          console.log("GOT THE RESULT");
-          console.log(result);
-          resolve(result);
-        }
+      const query = `SELECT * FROM visualization WHERE title = ${db.escape(
+        title_name
+      )}`;
+
+      const result = await new Promise((resolve, reject) => {
+        db.query(query, (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res);
+          }
+        });
       });
-    });
-  };
 
-  Promise.all(
-    jsonData.map(async (item) => {
-      try {
-        console.log("Promise entered");
-        const viewResults = await getViewResults(item.slug_name);
-        item.viewResult = viewResults;
-        return item;
-      } catch (err) {
-        console.error(
-          `Error fetching view results for visualization_id ${item}:`,
-          err
-        );
-        return item;
+      if (result.length > 0) {
+        const slug = result[0].slug;
+        const title = result[0].title;
+        jsonData[i].slug_name = slug;
+        jsonData[i].title_tag = title;
       }
-    })
-  )
-    .then((updatedData) => {
-      console.log("updatedData:", updatedData);
-      callback(null, updatedData);
-    })
-    .catch((err) => {
-      console.error("Error processing data:", err);
-      callback(err);
-    });
+    }
+
+    const getViewResults = (visualizationId) => {
+      return new Promise((resolve, reject) => {
+        db.query(`SELECT * FROM ${visualizationId}`, (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res);
+          }
+        });
+      });
+    };
+
+    const updatedData = await Promise.all(
+      jsonData.map(async (item) => {
+        try {
+          const viewResults = await getViewResults(item.slug_name);
+          item.viewResult = viewResults;
+          return item;
+        } catch (err) {
+          console.error(
+            `Error fetching view results for visualization_id ${item}:`,
+            err
+          );
+          return item;
+        }
+      })
+    );
+    callback(null, updatedData);
+  } catch (err) {
+    console.error("Error processing data:", err);
+    callback(err);
+  }
 };

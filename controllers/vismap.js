@@ -12,7 +12,7 @@ exports.processForm1 = (field1, field2, field3, field4, callback) => {
         return callback(error, null);
       }
     
-      console.log("Data inserted:", results);
+      // console.log("Data inserted:", results);
       return callback(null, results);
     });    
 };
@@ -28,7 +28,7 @@ exports.processForm2 = (field1, field2, field3, field4, condition, callback) => 
         return callback(error, null);
       }
     
-      console.log("Data updated:", results);
+      // console.log("Data updated:", results);
       return callback(null, results);
     });    
 };
