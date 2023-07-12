@@ -14,7 +14,8 @@ License: For each use you must have a valid license purchased only from above li
 
 <head>
     <base href="">
-    <title>Dashboard</title>
+    <title>Metronic - the world's #1 selling Bootstrap Admin Theme Ecosystem for HTML, Vue, React, Angular &amp; Laravel
+        by Keenthemes</title>
     <meta charset="utf-8">
     <meta name="description"
         content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Flask &amp; Laravel versions. Grab your copy now and get life-time updates for free.">
@@ -39,8 +40,24 @@ License: For each use you must have a valid license purchased only from above li
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css">
+    <!-- Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="/image.css">
+    <link href="https://cdn.datatables.net/1.12.0/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap5.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/image.css"> -->
+
 
 
 
@@ -917,6 +934,13 @@ License: For each use you must have a valid license purchased only from above li
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+
+
+
+
+
+
+
                 <!--begin::Sidebar-->
                 <div id="kt_app_sidebar" class="app-sidebar flex-column drawer drawer-start" data-kt-drawer="true"
                     data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}"
@@ -925,11 +949,11 @@ License: For each use you must have a valid license purchased only from above li
                     <!--begin::Logo-->
                     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
                         <!--begin::Logo image-->
-                        <a href="/api/dashboard">
-                            <img alt="Logo" src="/assets/media/logos/default-dark.svg"
-                                class="h-25px app-sidebar-logo-default">
-                            <img alt="Logo" src="/assets/media/logos/default-small.svg"
-                                class="h-20px app-sidebar-logo-minimize">
+
+                        <img alt="Logo" src="/assets/media/logos/default-dark.svg"
+                            class="h-25px app-sidebar-logo-default">
+                        <img alt="Logo" src="/assets/media/logos/default-small.svg"
+                            class="h-20px app-sidebar-logo-minimize">
                         </a>
                         <!--end::Logo image-->
                         <!--begin::Sidebar toggle-->
@@ -968,28 +992,8 @@ License: For each use you must have a valid license purchased only from above li
                                 <!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion hover show">
                                     <!--begin:Menu link-->
-                                    <span class="menu-link menu-item">
-                                        <!--begin:Menu link-->
-                                        <a class="menu-link active" onclick="redirectToDashboard()">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Dashboard</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </span>
 
 
-                                    <span class="menu-link menu-item">
-                                        <!--begin:Menu link-->
-                                        <a class="menu-link active" onclick="redirectToConfiguration()">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Configuration</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </span>
 
                                     <!--end:Menu link-->
 
@@ -1115,6 +1119,64 @@ License: For each use you must have a valid license purchased only from above li
 
                 </div>
                 <!--end::Sidebar-->
+                <br>
+                <br>
+                <!--chart code:: goes here-->
+                <div id="kt_app_content_container" class="app-container container-xxl">
+                    <div class="card mb-5 mb-xl-8">
+                        <!--begin::Header-->
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold fs-3 mb-1">Slug Table</span>
+                                <span class="text-muted mt-1 fw-semibold fs-7">Add all visualizations here</span>
+                            </h3>
+                            <div class="card-toolbar">
+                                <button type="button" id="add_data"
+                                    class="btn btn-success btn-sm float-end">Add</button>
+
+                                <!--end::Svg Icon-->
+
+                            </div>
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body py-3">
+                            <!--begin::Table container-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+
+                                <table class="table align-middle gs-0 gy-4" id="data">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <tr class="fw-bold text-muted bg-light">
+
+                                            <th class="ps-4 min-w-30px rounded-start">ID</th>
+                                            <th class="min-w-160px">Slug Title</th>
+                                            <th class="min-w-260px">Title</th>
+                                            <th class="min-w-290px">Description</th>
+                                            <th class="min-w-100px">Is Active</th>
+                                            <th class="min-w-200px text-end rounded-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody class="text-dark fw-bold">
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                                <!--end::Table-->
+                            </div>
+                            <!--end::Table container-->
+                        </div>
+                        <!--begin::Body-->
+                    </div>
+                </div>
+
+
+
+
 
 
 
@@ -4677,5 +4739,214 @@ License: For each use you must have a valid license purchased only from above li
     </div>
 </body><!--end::Body-->
 
+
 </html>
-<!--begin: :Head-->
+<div class="modal" tabindex="-1" id="action_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" id="sample_form">
+                <div class="modal-header" id="dynamic_modal_title">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Slug</label>
+                        <input type="text" name="slug" id="slug" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" id="title" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" id="description" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Is Active?</label>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="isActive" value="No" />
+                            <input type="checkbox" name="isActiveToggle" id="isActiveToggle" class="form-check-input"
+                                onchange="toggleIsActiveValue(this)" />
+                            <label class="form-check-label" for="isActiveToggle">Toggle to Activate/Deactivate</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="id" />
+                    <input type="hidden" name="action" id="action" value="Add" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="action_button">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleIsActiveValue(checkbox) {
+        var isActiveInput = document.querySelector('input[name="isActive"]');
+        isActiveInput.value = checkbox.checked ? "Yes" : "No";
+    }
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        load_data();
+
+        function load_data() {
+            $.ajax({
+                url: "http://localhost:3000/api/admin/slug/action",
+                method: "POST",
+                data: { action: 'fetch' },
+                dataType: "JSON",
+                success: function (data) {
+                    var html = '';
+
+                    if (data.data.length > 0) {
+                        for (var count = 0; count < data.data.length; count++) {
+                            html += `
+                        <tr>
+                            <td>`+ data.data[count].id + `</td>
+                            <td>`+ data.data[count].slug + `</td>
+                            <td>`+ data.data[count].title + `</td>
+                            <td>`+ data.data[count].description + `</td>
+                            <td>`+ data.data[count].isActive + `</td>
+                            <td><button type="button" class="btn btn-warning btn-sm edit" data-id="`+ data.data[count].id + `">Edit</button>&nbsp;<button type="button" class="btn btn-danger btn-sm delete" data-id="` + data.data[count].id + `">Delete</button></td>
+                            
+                        </tr>
+                        `;
+                        }
+                    }
+
+                    $('#data tbody').html(html);
+                }
+            });
+        }
+
+        $('#add_data').click(function () {
+            $('#dynamic_modal_title').text('Add Data');
+            $('#sample_form')[0].reset();
+            $('#action').val('Add');
+            $('#action_button').text('Add');
+            $('#action_modal').modal('show');
+        });
+
+        $('#sample_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // Clear previous validation alerts
+            $('.is-invalid').removeClass('is-invalid');
+
+            // Perform form validation
+            var isValid = true;
+
+            // Check if Slug is empty
+            var slugInput = $('#slug');
+            if (slugInput.val().trim() === '') {
+                isValid = false;
+                slugInput.addClass('is-invalid');
+            } else {
+                slugInput.removeClass('is-invalid');
+            }
+
+            // Check if Title is empty
+            var titleInput = $('#title');
+            if (titleInput.val().trim() === '') {
+                isValid = false;
+                titleInput.addClass('is-invalid');
+            } else {
+                titleInput.removeClass('is-invalid');
+            }
+
+            // Check if Description is empty
+            var descriptionInput = $('#description');
+            if (descriptionInput.val().trim() === '') {
+                isValid = false;
+                descriptionInput.addClass('is-invalid');
+            } else {
+                descriptionInput.removeClass('is-invalid');
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            $.ajax({
+                url: "http://localhost:3000/api/admin/slug/action",
+                method: "POST",
+                data: $('#sample_form').serialize(),
+                dataType: "JSON",
+                beforeSend: function () {
+                    $('#action_button').attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $('#action_button').attr('disabled', false);
+                    $('#message').html('<div class="alert alert-success">' + data.message + '</div>');
+                    $('#action_modal').modal('hide');
+
+                    load_data();
+
+                    setTimeout(function () {
+                        $('#message').html('');
+                    }, 5000);
+                }
+            });
+        });
+
+        $('#action_modal').on('shown.bs.modal', function () {
+            // Clear previous validation alerts when the modal is opened
+            $('.is-invalid').removeClass('is-invalid');
+        });
+
+        $(document).on('click', '.edit', function () {
+            var id = $(this).data('id');
+            $('#dynamic_modal_title').text('Edit Data');
+            $('#action').val('Edit');
+            $('#action_button').text('Edit');
+            $('#action_modal').modal('show');
+
+            $.ajax({
+                url: "http://localhost:3000/api/admin/slug/action",
+                method: "POST",
+                data: { id: id, action: 'fetch_single' },
+                dataType: "JSON",
+                success: function (data) {
+                    $('#slug').val(data.slug);
+                    $('#title').val(data.title);
+                    $('#description').val(data.description);
+                    $('#isActive').val(data.isActive);
+                    $('#id').val(data.id);
+                }
+            });
+
+        });
+
+        $(document).on('click', '.delete', function () {
+            var id = $(this).data('id');
+
+            if (confirm("Are you sure you want to delete this data?")) {
+                $.ajax({
+                    url: "http://localhost:3000/api/admin/slug/action",
+                    method: "POST",
+                    data: { action: 'delete', id: id },
+                    dataType: "JSON",
+                    success: function (data) {
+                        $('#message').html('<div class="alert alert-success">' + data.message + '</div>');
+                        load_data();
+                        setTimeout(function () {
+                            $('#message').html('');
+                        }, 5000);
+                    }
+                });
+            }
+
+        });
+    });
+
+</script>

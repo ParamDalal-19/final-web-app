@@ -14,8 +14,7 @@ License: For each use you must have a valid license purchased only from above li
 
 <head>
     <base href="">
-    <title>Metronic - the world's #1 selling Bootstrap Admin Theme Ecosystem for HTML, Vue, React, Angular &amp; Laravel
-        by Keenthemes</title>
+    <title>Dashboard</title>
     <meta charset="utf-8">
     <meta name="description"
         content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Flask &amp; Laravel versions. Grab your copy now and get life-time updates for free.">
@@ -41,7 +40,7 @@ License: For each use you must have a valid license purchased only from above li
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="/image.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/image.css"> -->
 
 
 
@@ -976,35 +975,27 @@ License: For each use you must have a valid license purchased only from above li
                                 <!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion hover show">
                                     <!--begin:Menu link-->
-                                    <span class="menu-link">
-
-                                        <div class="menu-item">
-                                            <!--begin:Menu link-->
-                                            <a class="menu-link active" onclick="redirectToDashboard()">
-                                                <span class="menu-bullet">
-                                                    <span class="bullet bullet-dot"></span>
-                                                </span>
-                                                <span class="menu-title">Dashboard</span>
-                                            </a>
-                                            <!--end:Menu link-->
-                                        </div>
-
-
+                                    <span class="menu-link menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link active" onclick="redirectToDashboard()">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Dashboard</span>
+                                        </a>
+                                        <!--end:Menu link-->
                                     </span>
 
-                                    <span class="menu-link">
-                                        <div class="menu-item">
-                                            <!--begin:Menu link-->
-                                            <a class="menu-link active" onclick="redirectToConfiguration()">
-                                                <span class="menu-bullet">
-                                                    <span class="bullet bullet-dot"></span>
-                                                </span>
-                                                <span class="menu-title">Configuration</span>
-                                            </a>
-                                            <!--end:Menu link-->
-                                        </div>
 
-
+                                    <span class="menu-link menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link active" onclick="redirectToConfiguration()">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Configuration</span>
+                                        </a>
+                                        <!--end:Menu link-->
                                     </span>
 
                                     <!--end:Menu link-->
@@ -1134,7 +1125,7 @@ License: For each use you must have a valid license purchased only from above li
                 <!--chart code:: goes here-->
                 <style>
                     body {
-                        font-family: Arial, sans-serif;
+
                         margin: 0;
                         padding: 20px;
                         overflow-y: auto;
@@ -1148,6 +1139,7 @@ License: For each use you must have a valid license purchased only from above li
                         /* Adjust the minimum and maximum width of the grid columns */
                         gap: 20px;
                         /* Adjust the gap between the grid items */
+
                     }
 
                     .chart {
@@ -1158,7 +1150,7 @@ License: For each use you must have a valid license purchased only from above li
                 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
 
                 <body>
-                    <h1>DASHBOARD</h1>
+
 
                     <div id="chart-container" class="chart-container">
                         <!-- The charts will be dynamically added here -->

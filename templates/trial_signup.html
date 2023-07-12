@@ -145,20 +145,21 @@
 
 <body>
   <div class="container">
-    <form method="POST" action="/api/register">
-      <h2>SIGNUP</h2>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required><br><br>
+    <form method="POST" action="/api/chart">
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required><br><br>
+      <label for="visualization_id">Visualization ID:</label>
+      <input type="text" id="visualization_id" name="visualization_id" required><br><br>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required><br><br>
+      <label for="chart_type_slug">Chart Type Slug:</label>
+      <input type="text" id="chart_type_slug" name="chart_type_slug" required><br><br>
 
-      <input type="submit" value="Register">
+      <label for="chart_type_normal">Chart Type Normal:</label>
+      <input type="text" id="chart_type_normal" name="chart_type_normal" required><br><br>
+
+      <input type="submit" value="Enter">
     </form>
   </div>
 </body>
+
 
 </html>

@@ -99,8 +99,12 @@ router.get("/home", checktoken, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "copy of index1.html"));
 });
 
+// router.get("/admin/home", checktoken, checkrole, (req, res) => {
+//   res.sendFile(path.join(__dirname, "templates", "admin_home.html"));
+// });
+
 router.get("/admin/home", checktoken, checkrole, (req, res) => {
-  res.sendFile(path.join(__dirname, "templates", "admin_home.html"));
+  res.render("slugtable");
 });
 
 // router.get("/dashboard", checktoken, (req, res) => {
@@ -255,8 +259,6 @@ router.get("/configuration", checktoken, (req, res) => {
           chartTypesDict[visualizationId] = [chartType];
         }
       });
-      // console.log(chartTypesDict);
-      // console.log("-----",chartTypesDict);
 
       // Send both viewNames and chartTypesDict to the frontend
       res.render("configurations", {
@@ -353,36 +355,84 @@ router.post(
       });
     }
 
-    if (action == "fetch_single") {
+    if (action === "fetch_single") {
       var id = request.body.id;
 
       var query = `SELECT * FROM visualization_mapping WHERE id = "${id}"`;
 
       db.query(query, function (error, data) {
-        response.json(data[0]);
+        if (error) {
+          console.error(error);
+          response.status(500).json({
+            error: "Internal server error",
+          });
+        } else {
+          // console.log("id ---", data[0].visualizationId);
+          var visid = data[0].visualizationId;
+
+          var visualizationQuery = `SELECT title FROM visualization WHERE id = "${visid}"`;
+          db.query(visualizationQuery, function (error, visualizationData) {
+            if (error) {
+              console.error(error);
+              response.status(500).json({
+                error: "Internal server error",
+              });
+            } else {
+              data[0].title = visualizationData[0].title;
+              console.log(data[0]);
+              response.json(data[0]);
+            }
+          });
+        }
       });
     }
 
     if (action == "Edit") {
       var id = request.body.id;
       var visualizationId = request.body.visualizationId;
+      var charttype = request.body.chartType;
       var columns = request.body.columns;
       var sequenceNumber = request.body.sequenceNumber;
       var isActive = request.body.isActive;
+      console.log("397", isActive)
+      var visualizationQuery = `SELECT id FROM visualization WHERE title = "${visualizationId}"`;
+      db.query(visualizationQuery, function (error, visualizationData) {
+        if (error) {
+          console.error(error);
+          response.status(500).json({
+            error: "Internal server error",
+          });
+        } else {
+          var visid = visualizationData[0]["id"];
+          var chartDictionary = {
+            "Bar Chart": "bar_chart",
+            "Pie Chart": "pie_chart",
+            "Bubble Chart": "bubble_chart",
+            "Line Chart": "line_chart",
+            "Scatter Plot": "scatter_plot",
+            "Histogram": "histogram",
+            "Key Value": "key_value",
+            "Dot Plot": "dot_plot",
+          };
+          chart_slug = chartDictionary[charttype];
 
-      var query = `
-          UPDATE visualization_mapping 
-          SET visualizationId = "${visualizationId}", 
-          columns = "${columns}", 
-          sequenceNumber = "${sequenceNumber}", 
-          isActive = "${isActive}" 
-          WHERE id = "${id}"
-          `;
+          var query = `
+              UPDATE visualization_mapping 
+              SET visualizationId = "${visid}",
+              chart_type_normal = "${charttype}", 
+              chart_type_slug = "${chart_slug}",
+              columns = "${columns}", 
+              sequenceNumber = "${sequenceNumber}", 
+              isActive = "${isActive}" 
+              WHERE id = "${id}"
+              `;
 
-      db.query(query, function (error, data) {
-        response.json({
-          message: "Data Edited",
-        });
+          db.query(query, function (error, data) {
+            response.json({
+              message: "Data Edited",
+            });
+          });
+        }
       });
     }
 
@@ -401,7 +451,7 @@ router.post(
 );
 
 router.get("/admin/slug", function (request, response, next) {
-  response.render("slug", { title: "Visualization Slug Table" });
+  response.render("slugtable", { title: "Visualization Slug Table" });
 });
 
 router.post("/admin/slug/action", function (request, response, next) {
@@ -520,6 +570,29 @@ router.post("/visualization-mapping", checktoken, (req, res) => {
   } else {
     return res.status(500).send("Error getting form data");
   }
+});
+
+router.get("/chart", (req, res) => {
+  res.sendFile(path.join(__dirname, "templates", "trial_signup.html"));
+});
+
+router.post("/chart", (req, res, next) => {
+  const { visualization_id, chart_type_slug, chart_type_normal } = req.body;
+
+  const sql = `INSERT INTO chart_types (visualization_id, chart_type_slug, chart_type_normal)
+               VALUES (?, ?, ?)`;
+  const values = [visualization_id, chart_type_slug, chart_type_normal];
+
+  db.query(sql, values, (error, results) => {
+    if (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "Error inserting data into chart_types table" });
+    } else {
+      res.redirect("/api/chart");
+    }
+  });
 });
 
 module.exports = router;
