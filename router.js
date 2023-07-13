@@ -17,7 +17,7 @@ router.get("/register", (req, res) => {
 
 router.post("/register", (req, res, next) => {
   db.query(
-    `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(
+    `SELECT * FROM users WHERE LOWER(username) = LOWER(${db.escape(
       req.body.email
     )});`,
     (err, result) => {
@@ -28,9 +28,9 @@ router.post("/register", (req, res, next) => {
       } else {
         // username is available
         db.query(
-          `INSERT INTO users (email, password) VALUES (${db.escape(
+          `INSERT INTO users (username, password, user_level_id) VALUES (${db.escape(
             req.body.email
-          )}, '${req.body.password}')`,
+          )}, '${req.body.password}', '0')`,
           (err, result) => {
             try {
               if (err) {
@@ -54,7 +54,7 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res, next) => {
   try {
     db.query(
-      `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(
+      `SELECT * FROM users WHERE LOWER(username) = LOWER(${db.escape(
         req.body.email
       )});`,
       (err, result) => {
@@ -67,7 +67,7 @@ router.post("/login", async (req, res, next) => {
 
         if (req.body.password === user.password) {
           const token = jwt.sign(
-            { email: user.email, role: user.role },
+            { email: user.username, role: user.user_level_id },
             "the-super-strong-secret",
             { expiresIn: "1h" }
           );
@@ -78,7 +78,7 @@ router.post("/login", async (req, res, next) => {
             httpOnly: true,
           }); // Set cookie to expire in 1 hour
 
-          if (user.role === "admin") {
+          if (user.user_level_id === "-1") {
             res.redirect("/api/admin/home");
           } else {
             res.redirect("/api/home");
