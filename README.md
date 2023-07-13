@@ -4,20 +4,20 @@ It is a web application developed by a team of 4 during the internship at Azure 
 
 ## Technologies Used
 
-- `Frontend`: HTML, CSS, JavaScript
-- `Backend`: Node.js, Express
-- `Database`: MySQL
+- `Frontend` : HTML, CSS, JavaScript
+- `Backend` : Node.js, Express
+- `Database` : MySQL
 
 ## Project Structure
 
 The project follows the following structure:
 
-- `controllers/`: Contains the codes for generating charts.
-- `dist/`: Contains the codes for all web pages to be displayed.
-- `validation/`: Contains the codes for user validation.
-- `router.js`: Contains all the GET and POST requests for different routes.
-- `server.js`: The main file that runs on npm start.
-- `templates/`: Contains files for webpage display (not required at the moment).
+- `controllers/` : Contains the codes for generating charts.
+- `dist/` : Contains the codes for all web pages to be displayed.
+- `validation/` : Contains the codes for user validation.
+- `router.js` : Contains all the GET and POST requests for different routes.
+- `server.js` : The main file that runs on npm start.
+- `templates/` : Contains files for webpage display (not required at the moment).
 
 ## Functionality
 
@@ -39,4 +39,11 @@ The project follows the following structure:
 5. Admin Page:
    - An `Admin page` is designed to allow the admin to control the types of analytics charts that can be generated.
    - The admin can activate or deactivate specific chart types.
+
+## Group Members
+
+1. Param Dalal
+2. Tej Kanjariya
+3. Harsh Shah
+4. Akshar Goyal
 
