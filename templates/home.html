@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,16 +15,29 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-color: #d4f6f6;
+            font-family: Arial, sans-serif;
         }
 
         .container {
             text-align: center;
+            /* margin-top: 5px; */
         }
 
         .button {
-            font-size: 24px;
-            padding: 12px 24px;
+            font-size: 20px;
+            padding: 10px 20px;
             margin: 10px;
+            background-color: #0fa9f1;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0e86e2;
         }
 
         .top-left-button {
@@ -31,11 +45,18 @@
             top: 10px;
             left: 10px;
         }
+
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>User Page</h1>
+        <h1>USER PAGE</h1>
         <button class="button top-left-button" onclick="redirectToLogin()">Login</button>
         <button class="button" onclick="redirectToConfiguration()">Configuration</button>
         <button class="button" onclick="redirectToDashboard()">Dashboard</button>
@@ -55,4 +76,5 @@
         }
     </script>
 </body>
+
 </html>

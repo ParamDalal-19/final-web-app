@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CRUD Application</title>
+</head>
+
+<body>
+    <style>body {
+        background-color: #3283fd40;
+        font-family: Arial, sans-serif;
+      }
+      
+      .container {
+        width: 75%;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      
+      h1 {
+        text-align: center;
+        color: #333;
+        font-family: "Helvetica", sans-serif;
+      }
+      
+      #popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(56, 187, 194, 0.834);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .popup-background {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(41, 61, 194);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .popup-form {
+        background-color: #1c8fb9;
+        padding: 20px;
+        border-radius: 5px;
+        width: 400px;
+        z-index: 99999;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      
+      form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+        font-family: "Arial", sans-serif;
+      }
+      
+      form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+      }
+      
+      form input[type="text"],
+      form input[type="number"],
+      form input[type="checkbox"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      
+      form input[type="checkbox"] {
+        display: inline-block;
+        width: auto;
+        margin-right: 10px;
+      }
+      
+      form button {
+        display: block;
+        width: 100%;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      
+      table th,
+      table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+      }
+      
+      table th {
+        background-color: #211276;
+        color: #fff;
+      }
+      
+      table td {
+        background-color: #f2f2f2;
+      }
+      
+      table td.is-active {
+        color: #007bff;
+      }
+      
+      table .edit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      
+      .background {
+        background-color: #07ff9c;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      
+      .button-new-entry {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-family: "Arial", sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      
+      .button-new-entry:hover {
+        background-color: #0056b3;
+      }</style>
+
+    <h1>Visualization Mapping</h1>
+    
+    <!-- <button id="new-entry-button">New Entry</button> -->
+    <div id="container">
+        <button id="new-entry-button" class="button-new-entry">New Entry</button>
+        <br><br>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Visualization ID</th>
+                <th>Columns</th>
+                <th>Sequence Number</th>
+                <th>Is Active</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+            <!-- Existing table rows -->
+        </tbody>
+    </table>
+
+    <div id="popup">
+        <form method="post" action="/submitForm">
+            <input type="hidden" name="formId" value="form">
+            <h2>New Entry</h2>
+            <label for="visualizationId">Visualization ID:</label>
+            <input type="text" id="visualizationId" name="visualizationId" required><br>
+            <label for="columns">Columns:</label>
+            <input type="text" id="columns" name="columns" required><br>
+            <label for="sequenceNumber">Sequence Number:</label>
+            <input type="text" id="sequenceNumber" name="sequenceNumber" required><br>
+            <label for="isActive">Is Active:</label>
+            <input type="checkbox" id="isActive" name="isActive"><br>
+            <button type="submit">Submit</button>
+            <button type="button" id="close-button">Close</button>
+        </form>
+        <form method="post" action="/submitForm" style="display: none;">
+            <input type="hidden" name="formId" value="edit-form">
+            <h2>Edit Entry</h2>
+            <label for="edit-visualizationId">Visualization ID:</label>
+            <input type="text" id="edit-visualizationId" name="edit-visualizationId" required><br>
+            <label for="edit-columns">Columns:</label>
+            <input type="text" id="edit-columns" name="edit-columns" required><br>
+            <label for="edit-sequenceNumber">Sequence Number:</label>
+            <input type="text" id="edit-sequenceNumber" name="edit-sequenceNumber" required><br>
+            <label for="edit-isActive">Is Active:</label>
+            <input type="checkbox" id="edit-isActive" name="edit-isActive"><br>
+            <button type="submit">Update</button>
+            <button type="button" id="close-button">Close</button> 
+        </form>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        const dataTableBody = $("#data-body");
+        const popup = $("#popup");
+        const form = $("#form");
+        const editForm = $("#edit-form");
+        let editRowId;
+      
+        // Show popup form
+        function showPopup() {
+          popup.show();
+        }
+      
+        // Hide popup form
+        function hidePopup() {
+          popup.hide();
+          form[0].reset();
+          editForm[0].reset();
+        }
+      
+        // Show edit form popup
+        function showEditPopup(id) {
+          const row = $(`#row-${id}`);
+          const visualizationId = row.find(".visualization-id").text();
+          const columns = row.find(".columns").text();
+          const sequenceNumber = row.find(".sequence-number").text();
+          const isActiveText = row.find(".is-active").text();
+          const isActive = isActiveText === "Yes";
+      
+          $("#edit-visualizationId").val(visualizationId);
+          $("#edit-columns").val(columns);
+          $("#edit-sequenceNumber").val(sequenceNumber);
+          $("#edit-isActive").prop("checked", isActive);
+      
+          popup.show();
+          editForm.show();
+          form.hide();
+        }
+      
+        // Hide edit form popup
+        function hideEditPopup() {
+          popup.hide();
+          editForm.hide();
+          form.show();
+          editForm[0].reset();
+        }
+      
+        // New Entry button click event
+        $("#new-entry-button").click(function () {
+          showPopup();
+          form.show();
+          editForm.hide();
+        });
+      
+        // Form submission event
+        form.submit(function (event) {
+          event.preventDefault();
+      
+          const visualizationId = parseInt($("#visualizationId").val(), 10);
+          const columns = parseInt($("#columns").val(), 10);
+          const sequenceNumber = parseInt($("#sequenceNumber").val(), 10);
+          const isActive = $("#isActive").is(":checked");
+      
+          if (isNaN(visualizationId) || isNaN(columns) || isNaN(sequenceNumber)) {
+            alert("Visualization ID, Columns, and Sequence Number must be integers.");
+            return;
+          }
+      
+          const newRow = $("<tr>");
+          newRow.attr("id", `row-${dataTableBody.children().length + 1}`);
+          newRow.html(`
+              <td>${dataTableBody.children().length + 1}</td>
+              <td class="visualization-id">${visualizationId}</td>
+              <td class="columns">${columns}</td>
+              <td class="sequence-number">${sequenceNumber}</td>
+              <td class="is-active">${isActive ? "Yes" : "No"}</td>
+              <td><button class="edit-button" data-id="${
+                dataTableBody.children().length + 1
+              }">Edit</button></td>
+            `);
+      
+          dataTableBody.append(newRow);
+          hidePopup();
+        });
+      
+        // Ajax form submission event
+        $(document).on("submit", "#form", function (e) {
+          e.preventDefault();
+      
+          var ajaxData = $(this).serialize();
+          console.log("_", ajaxData);
+      
+          $.ajax({
+            type: "post",
+            url: "/create",
+            data: ajaxData,
+            success: function (result, status) {
+              console.log("result", result);
+            },
+            error: function (status, err) {
+              console.log(err);
+            },
+          });
+        });
+      
+        // Edit button click event
+        dataTableBody.on("click", ".edit-button", function () {
+          const id = $(this).data("id");
+          editRowId = id;
+          showPopup();
+          editForm.show();
+          form.hide();
+          showEditPopup(id);
+        });
+      
+        // Update form
+        editForm.submit(function (event) {
+          event.preventDefault();
+      
+          const visualizationId = parseInt($("#edit-visualizationId").val(), 10);
+          const columns = parseInt($("#edit-columns").val(), 10);
+          const sequenceNumber = parseInt($("#edit-sequenceNumber").val(), 10);
+          const isActive = $("#edit-isActive").is(":checked");
+      
+          if (isNaN(visualizationId) || isNaN(columns) || isNaN(sequenceNumber)) {
+            alert("Visualization ID, Columns, and Sequence Number must be integers.");
+            return;
+          }
+      
+          const row = $(`#row-${editRowId}`);
+          row.find(".visualization-id").text(visualizationId);
+          row.find(".columns").text(columns);
+          row.find(".sequence-number").text(sequenceNumber);
+          row.find(".is-active").text(isActive ? "Yes" : "No");
+      
+          hideEditPopup();
+        });
+      
+        // Close button click event
+        $("#close-button").click(function () {
+          hidePopup();
+        });
+      });$(document).ready(function () {
+        const dataTableBody = $("#data-body");
+        const popup = $("#popup");
+        const form = $("#form");
+        const editForm = $("#edit-form");
+        let editRowId;
+      
+        // Show popup form
+        function showPopup() {
+          popup.show();
+        }
+      
+        // Hide popup form
+        function hidePopup() {
+          popup.hide();
+          form[0].reset();
+          editForm[0].reset();
+        }
+      
+        // Show edit form popup
+        function showEditPopup(id) {
+          const row = $(`#row-${id}`);
+          const visualizationId = row.find(".visualization-id").text();
+          const columns = row.find(".columns").text();
+          const sequenceNumber = row.find(".sequence-number").text();
+          const isActiveText = row.find(".is-active").text();
+          const isActive = isActiveText === "Yes";
+      
+          $("#edit-visualizationId").val(visualizationId);
+          $("#edit-columns").val(columns);
+          $("#edit-sequenceNumber").val(sequenceNumber);
+          $("#edit-isActive").prop("checked", isActive);
+      
+          popup.show();
+          editForm.show();
+          form.hide();
+        }
+      
+        // Hide edit form popup
+        function hideEditPopup() {
+          popup.hide();
+          editForm.hide();
+          form.show();
+          editForm[0].reset();
+        }
+      
+        // New Entry button click event
+        $("#new-entry-button").click(function () {
+          showPopup();
+          form.show();
+          editForm.hide();
+        });
+      
+        // Form submission event
+        form.submit(function (event) {
+          event.preventDefault();
+      
+          const visualizationId = parseInt($("#visualizationId").val(), 10);
+          const columns = parseInt($("#columns").val(), 10);
+          const sequenceNumber = parseInt($("#sequenceNumber").val(), 10);
+          const isActive = $("#isActive").is(":checked");
+      
+          if (isNaN(visualizationId) || isNaN(columns) || isNaN(sequenceNumber)) {
+            alert("Visualization ID, Columns, and Sequence Number must be integers.");
+            return;
+          }
+      
+          const newRow = $("<tr>");
+          newRow.attr("id", `row-${dataTableBody.children().length + 1}`);
+          newRow.html(`
+              <td>${dataTableBody.children().length + 1}</td>
+              <td class="visualization-id">${visualizationId}</td>
+              <td class="columns">${columns}</td>
+              <td class="sequence-number">${sequenceNumber}</td>
+              <td class="is-active">${isActive ? "Yes" : "No"}</td>
+              <td><button class="edit-button" data-id="${
+                dataTableBody.children().length + 1
+              }">Edit</button></td>
+            `);
+      
+          dataTableBody.append(newRow);
+          hidePopup();
+        });
+      
+        // Ajax form submission event
+        $(document).on("submit", "#form", function (e) {
+          e.preventDefault();
+      
+          var ajaxData = $(this).serialize();
+          console.log("_", ajaxData);
+      
+          $.ajax({
+            type: "post",
+            url: "/create",
+            data: ajaxData,
+            success: function (result, status) {
+              console.log("result", result);
+            },
+            error: function (status, err) {
+              console.log(err);
+            },
+          });
+        });
+      
+        // Edit button click event
+        dataTableBody.on("click", ".edit-button", function () {
+          const id = $(this).data("id");
+          editRowId = id;
+          showPopup();
+          editForm.show();
+          form.hide();
+          showEditPopup(id);
+        });
+      
+        // Update form
+        editForm.submit(function (event) {
+          event.preventDefault();
+      
+          const visualizationId = parseInt($("#edit-visualizationId").val(), 10);
+          const columns = parseInt($("#edit-columns").val(), 10);
+          const sequenceNumber = parseInt($("#edit-sequenceNumber").val(), 10);
+          const isActive = $("#edit-isActive").is(":checked");
+      
+          if (isNaN(visualizationId) || isNaN(columns) || isNaN(sequenceNumber)) {
+            alert("Visualization ID, Columns, and Sequence Number must be integers.");
+            return;
+          }
+      
+          const row = $(`#row-${editRowId}`);
+          row.find(".visualization-id").text(visualizationId);
+          row.find(".columns").text(columns);
+          row.find(".sequence-number").text(sequenceNumber);
+          row.find(".is-active").text(isActive ? "Yes" : "No");
+      
+          hideEditPopup();
+        });
+      
+        // Close button click event
+        $("#close-button").click(function () {
+          hidePopup();
+        });
+      });</script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-button {
+            margin-bottom: 10px;
+        }
+
+        .edit-button, .update-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .edit-button:hover, .update-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        var rowCount = 2;
+
+        function addRow() {
+            rowCount++;
+
+            var table = document.getElementById("myTable");
+            var row = table.insertRow(-1);
+
+            var idCell = row.insertCell(0);
+            idCell.innerHTML = `<input type="text" name="id_${rowCount}" placeholder="ID">`;
+
+            var slugCell = row.insertCell(1);
+            slugCell.innerHTML = `<input type="text" name="slug_${rowCount}" placeholder="Slug">`;
+
+            var titleCell = row.insertCell(2);
+            titleCell.innerHTML = `<input type="text" name="title_${rowCount}" placeholder="Title">`;
+
+            var descriptionCell = row.insertCell(3);
+            descriptionCell.innerHTML = `<input type="text" name="description_${rowCount}" placeholder="Description">`;
+
+            var isActiveCell = row.insertCell(4);
+            isActiveCell.innerHTML = `<input type="text" name="is_active_${rowCount}" placeholder="Is Active">`;
+
+            var editCell = row.insertCell(5);
+            editCell.innerHTML = `<button class="edit-button" onclick="editRow(this)">Edit</button>`;
+
+            var updateCell = row.insertCell(6);
+            updateCell.innerHTML = `<button class="update-button hidden" onclick="updateRow(this)">Update</button>`;
+        }
+
+        function editRow(editButton) {
+            var row = editButton.parentNode.parentNode;
+
+            for (var i = 0; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var value = cell.innerText;
+
+                cell.innerHTML = `<input type="text" value="${value}">`;
+            }
+
+            editButton.classList.add('hidden');
+
+            var updateButton = row.querySelector('.update-button');
+            updateButton.classList.remove('hidden');
+        }
+
+        function updateRow(updateButton) {
+            var row = updateButton.parentNode.parentNode;
+
+            for (var i = 0; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var input = cell.querySelector('input');
+                var value = input.value;
+
+                cell.innerHTML = value;
+            }
+
+            updateButton.classList.add('hidden');
+
+            var editButton = row.querySelector('.edit-button');
+            editButton.classList.remove('hidden');
+        }
+    </script>
+</head>
+<body>
+    <button class="add-button" onclick="addRow()">Add Row</button>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Slug</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Is Active</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>example-slug</td>
+                <td>Example Title</td>
+                <td>This is an example description.</td>
+                <td>Yes</td>
+                <td><button class="edit-button" onclick="editRow(this)">Edit</button></td>
+                <td class="hidden"><button class="update-button" onclick="updateRow(this)">Update</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>another-slug</td>
+                <td>Another Title</td>
+                <td>This is another example description.</td>
+                <td>No</td>
+                <td><button class="edit-button" onclick="editRow(this)">Edit</button></td>
+                <td class="hidden"><button class="update-button" onclick="updateRow(this)">Update</button></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

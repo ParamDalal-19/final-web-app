@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-button {
+            margin-bottom: 10px;
+        }
+
+        .edit-button, .update-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .edit-button:hover, .update-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-switch .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+    <script>
+        var rowCount = 2;
+
+        function addRow() {
+            rowCount++;
+
+            var table = document.getElementById("myTable");
+            var row = table.insertRow(-1);
+
+            var idCell = row.insertCell(0);
+            idCell.innerHTML = rowCount;
+
+            var slugCell = row.insertCell(1);
+            slugCell.innerHTML = `<input type="text" name="slug_${rowCount}" placeholder="Slug">`;
+
+            var titleCell = row.insertCell(2);
+            titleCell.innerHTML = `<input type="text" name="title_${rowCount}" placeholder="Title">`;
+
+            var descriptionCell = row.insertCell(3);
+            descriptionCell.innerHTML = `<input type="text" name="description_${rowCount}" placeholder="Description">`;
+
+            var isActiveCell = row.insertCell(4);
+            isActiveCell.innerHTML = `
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_active_${rowCount}" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            `;
+
+            var editCell = row.insertCell(5);
+            editCell.innerHTML = `<button class="edit-button" onclick="editRow(this)">Edit</button>`;
+
+            var updateCell = row.insertCell(6);
+            updateCell.innerHTML = `<button class="update-button hidden" onclick="updateRow(this)">Update</button>`;
+        }
+
+        function editRow(editButton) {
+            var row = editButton.parentNode.parentNode;
+
+            for (var i = 1; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var value = cell.innerText;
+
+                if (i === 4) {
+                    var isChecked = value.toLowerCase() === 'yes' ? 'checked' : '';
+                    cell.innerHTML = `
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${isChecked}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    `;
+                } else {
+                    cell.innerHTML = `<input type="text" value="${value}">`;
+                }
+            }
+
+            editButton.classList.add('hidden');
+
+            var updateButton = row.querySelector('.update-button');
+            updateButton.classList.remove('hidden');
+        }
+
+        function updateRow(updateButton) {
+            var row = updateButton.parentNode.parentNode;
+
+            for (var i = 1; i < row.cells.length - 2; i++) {
+                var cell = row.cells[i];
+                var input = cell.querySelector('input');
+                var value = input.value;
+
+                if (i === 4) {
+                    value = input.checked ? 'Yes' : 'No';
+                }
+
+                cell.innerHTML = value;
+            }
+
+            updateButton.classList.add('hidden');
+
+            var editButton = row.querySelector('.edit-button');
+            editButton.classList.remove('hidden');
+        }
+    </script>
+</head>
+<body>
+    <button class="add-button" onclick="addRow()">Add Row</button>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Slug</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Is Active</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><input type="text" name="slug_1" placeholder="Slug"></td>
+                <td><input type="text" name="title_1" placeholder="Title"></td>
+                <td><input type="text" name="description_1" placeholder="Description"></td>
+                <td>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="is_active_1" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </td>
+                <td><button class="edit-button" onclick="editRow(this)">Edit</button></td>
+                <td class="hidden"><button class="update-button" onclick="updateRow(this)">Update</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><input type="text" name="slug_2" placeholder="Slug"></td>
+                <td><input type="text" name="title_2" placeholder="Title"></td>
+                <td><input type="text" name="description_2" placeholder="Description"></td>
+                <td>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="is_active_2" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </td>
+                <td><button class="edit-button" onclick="editRow(this)">Edit</button></td>
+                <td class="hidden"><button class="update-button" onclick="updateRow(this)">Update</button></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
