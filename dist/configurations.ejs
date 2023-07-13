@@ -4611,17 +4611,11 @@ License: For each use you must have a valid license purchased only from above li
     var chartTypesDict = JSON.parse(unescape('<%- JSON.stringify(chartTypesDict) %>'));
 
     function updateChartTypes() {
-        // console.log("update chart run start");
         var visualizationId = document.getElementById("visualizationId").value;
         var chartTypeSelect = document.getElementById("chartType");
 
-        // Clear existing options
         chartTypeSelect.innerHTML = "";
-
-        // Get the chart types based on the selected visualization ID
-        // console.log("---", chartTypesDict);
         var chartTypes = chartTypesDict[visualizationId];
-        // console.log("--charttypes2", chartTypes)
 
         // Iterate over the chart types and create option elements
         chartTypes.forEach(function (chartType) {
@@ -4629,7 +4623,6 @@ License: For each use you must have a valid license purchased only from above li
             option.value = chartType;
             option.text = chartType;
             chartTypeSelect.appendChild(option);
-            // console.log("chart type run stop");
         });
     }
 </script>
@@ -4655,7 +4648,6 @@ License: For each use you must have a valid license purchased only from above li
                 data: { action: 'fetch' },
                 dataType: "JSON",
                 success: function (data) {
-                    // console.log("hu aya chu1",data.data[0])
                     var html = '';
 
                     if (data.data.length > 0) {

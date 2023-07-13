@@ -99,66 +99,9 @@ router.get("/home", checktoken, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "copy of index1.html"));
 });
 
-// router.get("/admin/home", checktoken, checkrole, (req, res) => {
-//   res.sendFile(path.join(__dirname, "templates", "admin_home.html"));
-// });
-
 router.get("/admin/home", checktoken, checkrole, (req, res) => {
   res.render("slugtable");
 });
-
-// router.get("/dashboard", checktoken, (req, res) => {
-//   const email = req.decoded.email;
-//   visdata.get_vis_data(email, (err, result) => {
-//     if (err) {
-//       return res.status(500).json({ error: "An error occurred" });
-//     }
-
-//     visdata.get_vis_chart_data(result, (err, finalresult) => {
-//       if (err) {
-//         return res.status(500).json({ error: "An error occurred" });
-//       }
-
-//       const chartResults = []; // JSON array to store chart results
-
-//       // Use async/await to handle asynchronous calls
-//       const processCharts = async () => {
-//         for (const visualization of finalresult) {
-//           const visualizationId = visualization.slug_name;
-//           const viewResults = visualization.viewResult;
-//           const chartType = visualization.chart_type;
-//           // console.log("check this out :-", visualizationId, viewResults, chartType);
-
-//           try {
-//             makechart.create_chart(
-//               viewResults,
-//               visualizationId,
-//               chartType,
-//               (chartResult, err) => {
-//                 if (err) {
-//                   console.error("An error occurred while creating chart:", err);
-//                 } else {
-//                   chartResults.push(chartResult);
-//                 }
-//               }
-//             );
-//           } catch (err) {
-//             console.error("An error occurred while creating chart:", err);
-//           }
-//         }
-//         // Send the JSON array to the frontend
-//         // res.render('dashboard', { chartResults });
-//         // res.render('dashboard')
-//         res.render("dashboard", { chartResults });
-//         //To display json data
-//         // res.json(chartResults);
-//       };
-
-//       // Invoke the async function to process charts
-//       processCharts();
-//     });
-//   });
-// });
 
 router.get("/dashboard", checktoken, (req, res) => {
   const email = req.decoded.email;
@@ -178,14 +121,14 @@ router.get("/dashboard", checktoken, (req, res) => {
       const chartResults = [];
       // const columnSet = [];
       // JSON array to store chart results
-      // console.log(finalresult)
+      
       // Use async/await to handle asynchronous calls
       const processCharts = async () => {
         for (const visualization of finalresult) {
-          // console.log("asdasd--",visualization);
+          
           const visualizationId = visualization.slug_name;
           const title_name = visualization.title_tag;
-          // console.log(title_name);
+          
           // const seqNum = visualization.sequenceNumber;
           const viewResults = visualization.viewResult;
           const chartType = visualization.chart_type_slug;
@@ -220,16 +163,6 @@ router.get("/dashboard", checktoken, (req, res) => {
   });
 });
 
-// router.get("/configuration", checktoken, (req, res) => {
-//   // const query = 'SHOW FULL TABLES WHERE Table_type = "VIEW"';
-//   const query = "SELECT title FROM visualization WHERE isActive = 'Yes'";
-//   db.query(query, (err, results) => {
-//     if (err) throw err;
-//     const viewNames = results.map((row) => row[Object.keys(row)[0]]);
-//     res.render("configurations", { title: "Visualization Mapping", viewNames });
-//   });
-// });
-
 router.get("/configuration", checktoken, (req, res) => {
   const query = "SELECT title FROM visualization WHERE isActive = 'Yes'";
   db.query(query, (err, results) => {
@@ -241,7 +174,7 @@ router.get("/configuration", checktoken, (req, res) => {
       "SELECT visualization_id, chart_type_normal FROM chart_types";
     db.query(chartTypesQuery, (err, chartTypesResults) => {
       if (err) throw err;
-      // console.log("-----",chartTypesResults);
+      
       // Create an empty dictionary
       const chartTypesDict = {};
 
@@ -312,7 +245,7 @@ router.post(
                   title: visualizationMap[item.visualizationId],
                 };
               });
-              // console.log(modifiedData);
+              
               response.json({
                 data: modifiedData,
               });
@@ -323,22 +256,22 @@ router.post(
     }
 
     if (action == "Add") {
-      // console.log("router config add");
+     
       var visualizationId = request.body.visualizationId;
       var charttype = request.body.chartType;
       var columns = request.body.columns;
       var sequenceNumber = request.body.sequenceNumber;
       var isActive = request.body.isActive;
       var emailid = request.decoded.email;
-      // console.log(visualizationId);
+      
       var find_vis_id = `SELECT id FROM visualization WHERE title = "${visualizationId}"`;
       var find_chart_name = `SELECT chart_type_slug FROM chart_types WHERE visualization_id = "${visualizationId}" and chart_type_normal = "${charttype}"`;
       db.query(find_vis_id, function (error, res_id) {
-        // console.log(res_id[0]["id"]);
+        
         vis_num = res_id[0]["id"];
         db.query(find_chart_name, function (err, res_chart_name) {
           chart_name = res_chart_name[0]["chart_type_slug"];
-          // console.log(res_chart_name);
+          
           var query = `
           INSERT INTO visualization_mapping 
           (visualizationId, columns, sequenceNumber, isActive, chart_type_slug, chart_type_normal, userid) 
@@ -346,7 +279,7 @@ router.post(
           `;
 
           db.query(query, function (error, data) {
-            // console.log("router config add runquery");
+            
             response.json({
               message: "Data Added",
             });
@@ -367,7 +300,7 @@ router.post(
             error: "Internal server error",
           });
         } else {
-          // console.log("id ---", data[0].visualizationId);
+          
           var visid = data[0].visualizationId;
 
           var visualizationQuery = `SELECT title FROM visualization WHERE id = "${visid}"`;
@@ -379,7 +312,6 @@ router.post(
               });
             } else {
               data[0].title = visualizationData[0].title;
-              console.log(data[0]);
               response.json(data[0]);
             }
           });
@@ -394,7 +326,6 @@ router.post(
       var columns = request.body.columns;
       var sequenceNumber = request.body.sequenceNumber;
       var isActive = request.body.isActive;
-      console.log("397", isActive)
       var visualizationQuery = `SELECT id FROM visualization WHERE title = "${visualizationId}"`;
       db.query(visualizationQuery, function (error, visualizationData) {
         if (error) {
@@ -413,6 +344,7 @@ router.post(
             "Histogram": "histogram",
             "Key Value": "key_value",
             "Dot Plot": "dot_plot",
+            "Table": "table",
           };
           chart_slug = chartDictionary[charttype];
 

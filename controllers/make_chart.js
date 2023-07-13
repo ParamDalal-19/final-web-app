@@ -119,39 +119,68 @@ function barChart(data, title = "", barmode = "group", orientation = "none") {
   return result;
 }
 
-function barhChart(data, title = "") {
-  const result = barChart(data, title, "group", "h");
-  const firstObject = data[0];
-  const columnNames = Object.keys(firstObject);
-  const xAttribute = columnNames[0];
-  const yAttribute = columnNames[1];
-  result.layout.title = {
-    text: title,
-    font: {
-      family: "Arial",
-      size: 16,
-      color: "#777777",
-    },
-    x: 0.5,
-    xref: "paper",
-    yref: "paper",
-    y: -0.1,
-    yanchor: "bottom",
-  };
-  result.data.forEach((trace) => {
-    trace.x = trace.y;
-    trace.y = data.map((item) => item[xAttribute]);
-  });
-  result.layout.yaxis.title.text = result.layout.xaxis.title.text;
-  result.layout.xaxis.title.text = "";
+function barhChart(data, title) {
+  try {
+    const firstObject = data[0];
+    const columnNames = Object.keys(firstObject);
 
-  // Remove tick values from x and y axes
-  result.layout.xaxis.tickvals = [];
-  result.layout.yaxis.tickvals = [];
+    const xatribute = columnNames[0];
+    const yatribute = columnNames[1];
+    let xarr = [];
+    let yarr = [];
+    const traces = [];
 
-  return result;
+    xarr = data.map((ele) => ele[xatribute]);
+    yarr = data.map((ele) => ele[yatribute]);
+
+    const cellColors = [
+      "#3386FF",
+      "#33D9B2",
+      "#FF59A3",
+      "#FF7939",
+      "#28C3FF",
+      "#00B39A",
+    ];
+
+    traces.push({
+      type: "table",
+      header: {
+        values: [xatribute],
+        align: ["center"],
+        line: { width: 0, color: "white" },
+        font: { family: "Arial", size: 16, color: "#777777" },
+        height: 30,
+      },
+      cells: {
+        values: [xarr],
+        align: ["center"],
+        line: { color: "#506784", width: 0 },
+        fill: { color: ["white"] },
+        font: {
+          family: "Arial",
+          size: 120,
+          color: cellColors[Math.floor(Math.random() * cellColors.length)],
+        },
+        height: 80,
+      },
+    });
+
+    const LAYOUT = {
+      margin: {
+        t: 160,
+      },
+      height: 500,
+    };
+
+    const CONFIG = {};
+
+    return { data: traces, layout: LAYOUT, config: CONFIG };
+  } catch (error) {
+    throw new Error(
+      "Error in the plot making function. Please check if the input or the layout are prepared properly."
+    );
+  }
 }
-
 
 function process_x_bar_chart(data, title = "", orientation = "none") {
   const firstObject = data[0];
@@ -297,7 +326,6 @@ function process_x_bubble_chart(data, title = "", orientation = "none") {
     width: 0.5,
   });
 
-  console.log(traces);
   const layout = {
     ...LAYOUT,
     title: {
@@ -618,7 +646,6 @@ function lineChart(data, title, mode = "lines") {
   }
 }
 
-
 function scatterPlot(data, title, mode = "markers") {
   try {
     const firstObject = data[0];
@@ -902,28 +929,72 @@ function histogram(data, title, barmode = "overlay") {
   }
 }
 
-function displayData(data) {
-  let result = "";
+function table(data, title) {
+  try {
+    const firstObject = data[0];
+    const columnNames = Object.keys(firstObject);
 
-  // Iterate over each data object
-  data.forEach((item) => {
-    const columnNames = Object.keys(item);
-    const title = columnNames[0];
-    const value = columnNames[1];
+    const xAttribute = columnNames[0];
+    const yAttribute = columnNames[1];
+    const xArr = data.map((ele) => ele[xAttribute]);
+    const yArr = data.map((ele) => ele[yAttribute]);
 
-    // Format the title and value in different font sizes
-    const formattedTitle = `<span style="font-size: 12px">${item[title]}</span>`;
-    const formattedValue = `<span style="font-size: 16px">${item[value]}</span>`;
+    const colors = [
+      "#3386FF",
+      "#33D9B2",
+      "#FF59A3",
+      "#FF7939",
+      "#28C3FF",
+      "#00B39A",
+    ];
 
-    // Append the formatted title and value to the result
-    result += `${formattedTitle}: ${formattedValue}<br>`;
-  });
+    const randomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
-  return result;
+    const traces = [
+      {
+        type: "table",
+        header: {
+          values: columnNames,
+          align: ["left", "center"], // Align column 1 to left and column 2 to center
+          line: { width: 0.5, color: "#506784" },
+          fill: { color: colors.map(() => randomColor()) }, // Randomly select a color from the colors array for each column
+          font: { family: "Arial", size: 16, color: "white" },
+        },
+        cells: {
+          values: [xArr, yArr],
+          align: ["left", "center"], // Align column 1 to left and column 2 to center
+          line: { color: ["#506784"], width: 0.5 },
+          fill: { color: ["white"] },
+          font: { family: "Arial", size: 15, color: ["#506784"] },
+          height: 30,
+          padding: 10,
+        },
+      },
+    ];
+
+    const result = {
+      data: traces,
+      layout: {
+        ...LAYOUT,
+        title: {
+          text: title,
+          font: {
+            family: "Arial",
+            size: 16,
+            color: "#777777",
+          },
+          x: 0.5,
+        },
+      },
+      config: { displayModeBar: false },
+    };
+    return result;
+  } catch (error) {
+    throw new Error(
+      "Error in the table making function. Please check if the input or the layout are prepared properly."
+    );
+  }
 }
-
-
-
 
 let charts = new Map();
 list_special_views = [
@@ -956,11 +1027,11 @@ charts.set("top_ten_most_clicked_sneaker_brands", {
   histogram: histogram,
 });
 charts.set("most_clicked_product", {
-  bar_chart: process_x_bar_chart,
-  bubble_chart: process_x_bubble_chart,
+  bar_chart: barChart,
+  bubble_chart: bubbleChart,
   pie_chart: pieChart,
+  table: table,
 });
-
 charts.set("average_category_view_per_session", {
   bar_chart: barhChart,
 });
@@ -1076,6 +1147,7 @@ charts.set("event_distribution_by_week", {
 charts.set("most_active_time_of_day_for_user_interactions", {
   line_chart: lineChart,
   histogram: histogram,
+  table: table,
 });
 charts.set("most_clicked_coffee_machine_brands", {
   bar_chart: barChart,
@@ -1084,6 +1156,7 @@ charts.set("most_clicked_coffee_machine_brands", {
 });
 charts.set("most_clicked_coffee_machine_by_material", {
   pie_chart: pieChart,
+  table: table,
 });
 charts.set("most_clicked_coffee_machine_by_price", {
   pie_chart: pieChart,
@@ -1279,6 +1352,7 @@ charts.set("user_activity_peak_hour", {
   bar_chart: barChart,
   // pie_chart: pieChart,
   bubble_chart: bubbleChart,
+  table: table,
 });
 charts.set("user_engagement_day_of_week", {
   line_chart: lineChart,
@@ -1305,6 +1379,7 @@ charts.set("user_preference_color_sneakers", {
 });
 charts.set("user_preference_sneaker_type", {
   pie_chart: pieChart,
+  table: table,
 });
 charts.set("user_sessions_ended_per_day", {
   line_chart: lineChart,

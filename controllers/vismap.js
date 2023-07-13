@@ -11,8 +11,7 @@ exports.processForm1 = (field1, field2, field3, field4, callback) => {
         console.error("Error inserting data:", error);
         return callback(error, null);
       }
-    
-      // console.log("Data inserted:", results);
+  
       return callback(null, results);
     });    
 };
@@ -27,8 +26,6 @@ exports.processForm2 = (field1, field2, field3, field4, condition, callback) => 
         console.error("Error updating data:", error);
         return callback(error, null);
       }
-    
-      // console.log("Data updated:", results);
       return callback(null, results);
     });    
 };
