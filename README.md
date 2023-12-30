@@ -47,3 +47,7 @@ The project follows the following structure:
 3. Harsh Shah
 4. Akshar Goyal
 
+## For this code to work
+
+Clone this repository in the location `C:\xamppp\htdocs\folder_name`.
+Open a terminal and write the command `npm start`.
